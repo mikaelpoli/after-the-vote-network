@@ -1,6 +1,7 @@
 """ SETUP """
 # LIBRARIES
 import json
+import pandas as pd
 from pathlib import Path
 import sys
 import tqdm
@@ -51,3 +52,13 @@ def fetch_posts_from_subreddits(subreddits, n_posts, time_filter, to_json=True):
             print(f"Saved {len(unique_posts_list)} posts from r/{key} to JSON")
         
     return retrieved_posts
+
+def filter_posts_by_date(start_date, end_date, dataframes):
+    for key, df, in dataframes.items():
+        df['created_datetime'] = pd.to_datetime(df['created_utc'], unit='s')
+        filtered_df = df[(df['created_datetime'] >= start_date) & (df['created_datetime'] <= end_date)]
+        dataframes[key] = filtered_df
+        print(f"After filtering '{key}': {len(filtered_df)} posts")
+    
+    print("Filtered dataframes by date.")
+    return dataframes

@@ -1,4 +1,4 @@
-""" SETUP """
+# SETUP
 # LIBRARIES
 import json
 import pandas as pd
@@ -10,14 +10,22 @@ import time
 import tqdm
 
 # DIRECTORIES
-BASE_DIR = Path(__file__).resolve().parent
+try:
+    BASE_DIR = Path(__file__).resolve().parent
+except NameError:
+    BASE_DIR = Path().resolve()
+
 SRC_DIR = BASE_DIR / 'src'
-sys.path.append(str(SRC_DIR))
+if str(SRC_DIR) not in sys.path:
+    sys.path.append(str(SRC_DIR))
+
 DATA_DIR = BASE_DIR / 'data'
 DATA_DIR.mkdir(exist_ok=True)
-RESULTS_DIR = BASE_DIR / 'results'
 
-""" IMPORT DATA """
+# CUSTOM LIBRARIES
+import utils
+
+# IMPORT DATA
 # Load data from JSON
 json_files = list(DATA_DIR.glob('*.json'))
 loaded_data = {}
@@ -32,3 +40,10 @@ for key, value in loaded_data.items():
     if isinstance(value, list):
         dataframes[key] = pd.DataFrame(value)
     print(f"Length df '{key}': {len(dataframes[key])}")
+
+# Select only posts from December 6, 2024 on
+start_date = pd.to_datetime("2024-12-06")
+end_date = pd.to_datetime("2025-05-17")
+dfs = dataframes.copy()
+dfs = utils.filter_posts_by_date(start_date, end_date, dfs)
+
