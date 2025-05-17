@@ -2,11 +2,13 @@
 # LIBRARIES
 import json
 from pathlib import Path
+import sys
 import tqdm
 
 # DIRECTORIES
 BASE_DIR = Path(__file__).resolve().parent.parent
 SRC_DIR = BASE_DIR / 'src'
+sys.path.append(str(SRC_DIR))
 DATA_DIR = BASE_DIR / 'data'
 DATA_DIR.mkdir(exist_ok=True)
 RESULTS_DIR = BASE_DIR / 'results'
@@ -16,10 +18,11 @@ RESULTS_DIR = BASE_DIR / 'results'
 def fetch_posts_from_subreddits(subreddits, n_posts, time_filter, to_json=True):
     retrieved_posts = {}
     for subreddit in subreddits:
+        key = subreddit.display_name
         all_posts = []
 
         for post in tqdm.tqdm(subreddit.top(limit=n_posts, time_filter=time_filter),
-                        total=n_posts, desc=f'Reddit posts from r/{subreddit.display_name}'):
+                        total=n_posts, desc=f'Reddit posts from r/{key}'):
             all_posts.append({
                 'subreddit': post.subreddit.display_name,
                 'selftext': post.selftext,
@@ -37,12 +40,14 @@ def fetch_posts_from_subreddits(subreddits, n_posts, time_filter, to_json=True):
         # Remove duplicates by post ID
         unique_posts = {post['id']: post for post in all_posts}
         unique_posts_list = list(unique_posts.values())
-        retrieved_posts[subreddit.display_name] = unique_posts_list
+        retrieved_posts[key] = unique_posts_list
+        print(f"Retrieved {len(retrieved_posts[key])} posts from r/{key}")
         
         # Save to JSON
         if to_json:
-            filename = DATA_DIR / f'{subreddit.display_name}_top_posts.json'
+            filename = DATA_DIR / f'{key}.json'
             with open(filename, 'w', encoding='utf-8') as f:
                 json.dump(unique_posts_list, f, ensure_ascii=False, indent=2)
-
+            print(f"Saved {len(unique_posts_list)} posts from r/{key} to JSON")
+        
     return retrieved_posts
