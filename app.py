@@ -12,11 +12,20 @@ import time
 import tqdm
 
 # DIRECTORIES
-BASE_DIR = Path(__file__).resolve().parent
+try:
+    BASE_DIR = Path(__file__).resolve().parent
+except NameError:
+    BASE_DIR = Path().resolve()
+
 SRC_DIR = BASE_DIR / 'src'
-sys.path.append(str(SRC_DIR))
+if str(SRC_DIR) not in sys.path:
+    sys.path.append(str(SRC_DIR))
+
 DATA_DIR = BASE_DIR / 'data'
 DATA_DIR.mkdir(exist_ok=True)
+
+print(BASE_DIR)
+print(SRC_DIR)
 
 # CUSTOM LIBRARIES
 import utils
