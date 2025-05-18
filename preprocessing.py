@@ -1,5 +1,5 @@
 """ DESCRIPTION """
-# Clean comments for semantic network anaylsis
+# Clean posts and comments for semantic network anaylsis
 
 """ SETUP """
 # LIBRARIES
@@ -34,6 +34,23 @@ RESULTS_DIR = BASE_DIR / 'results'
 import utils
 
 """ IMPORT DATA """
+# POSTS
+# Load data from JSON
+json_files = list(POSTS_FILTERED_DIR.glob('*.json'))
+loaded_data = {}
+for file in json_files:
+    key = Path(file).stem.replace('_filtered', '')
+    with open(file, 'r', encoding='utf-8') as f:
+        loaded_data[key] = json.load(f)
+
+# Convert to df
+posts = {}
+for key, value in loaded_data.items():
+    if isinstance(value, list):
+        posts[key] = pd.DataFrame(value)
+    print(f"Length posts df '{key}': {len(posts[key])}")
+
+# COMMENTS
 # Load data from JSON
 json_files = list(COMMENTS_DIR.glob('*.json'))
 loaded_data = {}
@@ -47,4 +64,5 @@ comments = {}
 for key, value in loaded_data.items():
     if isinstance(value, list):
         comments[key] = pd.DataFrame(value)
-    print(f"Length df '{key}': {len(comments[key])}")
+        comments[key]['subreddit'] = key
+    print(f"Length comments df '{key}': {len(comments[key])}")
