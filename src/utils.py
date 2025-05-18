@@ -121,3 +121,17 @@ def fetch_comments_from_subreddit(api, posts_df, to_json=True, dir=None):
             print(f"Saved {len(unique_comments_list)} comments from r/{key} to JSON")
     
     return comments
+
+
+def extract_relevant_text(dataframes, col=None):
+    all_titles = []
+    df_keys = []
+    title_indices = []
+
+    for key, df in dataframes.items():
+        titles = df[col].tolist()
+        all_titles.extend(titles)
+        df_keys.extend([key] * len(titles))
+        title_indices.extend(df.index.tolist())
+
+    return all_titles, df_keys, title_indices
