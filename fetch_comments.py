@@ -8,10 +8,7 @@ import json
 import pandas as pd
 from pathlib import Path
 import praw
-import praw.exceptions
 import sys
-import time
-import tqdm
 
 # DIRECTORIES
 try:
