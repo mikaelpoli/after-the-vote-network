@@ -135,3 +135,13 @@ def extract_relevant_text(dataframes, col=None):
         title_indices.extend(df.index.tolist())
 
     return all_titles, df_keys, title_indices
+
+
+def assign_cleaned_text_to_dfs(cleaned_results, keys, indices, dataframes, clean_col='clean_text', clean_pos_col='clean_text_pos'):
+    for i, result in enumerate(cleaned_results):
+        key = keys[i]
+        idx = indices[i]
+        dataframes[key].loc[idx, clean_col] = result['text_clean']
+        dataframes[key].loc[idx, clean_pos_col] = result['pos_clean']
+
+    return dataframes
