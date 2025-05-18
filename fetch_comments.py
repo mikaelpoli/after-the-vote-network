@@ -1,5 +1,6 @@
 """ DESCRIPTION """
-# Download Top posts for selected subreddits Reddit's API
+# Filter top posts by date for selected subreddits
+# Download comments from filtered posts
 
 """ SETUP"""
 # LIBRARIES
@@ -24,13 +25,18 @@ if str(SRC_DIR) not in sys.path:
 
 DATA_DIR = BASE_DIR / 'data'
 DATA_DIR.mkdir(exist_ok=True)
+POSTS_DIR = DATA_DIR / 'posts'
+POSTS_ALL_DIR = POSTS_DIR / 'all'
+POSTS_FILTERED_DIR = POSTS_DIR / 'filtered'
+COMMENTS_DIR = DATA_DIR / 'comments'
+RESULTS_DIR = BASE_DIR / 'results'
 
 # CUSTOM LIBRARIES
 import utils
 
 """ IMPORT DATA """
 # Load data from JSON
-json_files = list(DATA_DIR.glob('*.json'))
+json_files = list(POSTS_ALL_DIR.glob('*.json'))
 loaded_data = {}
 for file in json_files:
     key = Path(file).stem
@@ -47,8 +53,7 @@ for key, value in loaded_data.items():
 # Select only posts from December 6, 2024 on
 start_date = pd.to_datetime("2024-12-06")
 end_date = pd.to_datetime("2025-05-17")
-dfs = posts.copy()
-top_posts = utils.filter_posts_by_date(start_date, end_date, dfs)
+top_posts = utils.filter_posts_by_date(start_date, end_date, posts, to_json=True, dir=POSTS_FILTERED_DIR)
 
 """ FETCH COMMENTS """
 # AUTHENTICATION
@@ -60,7 +65,4 @@ reddit = praw.Reddit(
 )
 
 # GET COMMENTS
-comments_dict = utils.fetch_comments_from_subreddit(reddit, top_posts, to_json=True)
-
-""" CLEAN COMMENTS """
-# ...
+comments_dict = utils.fetch_comments_from_subreddit(reddit, top_posts, to_json=True, dir=COMMENTS_DIR)

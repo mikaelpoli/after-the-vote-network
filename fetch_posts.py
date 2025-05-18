@@ -3,13 +3,9 @@
 
 """ SETUP """
 # LIBRARIES
-import json
 from pathlib import Path
 import praw
-import praw.exceptions
 import sys
-import time
-import tqdm
 
 # DIRECTORIES
 try:
@@ -23,9 +19,11 @@ if str(SRC_DIR) not in sys.path:
 
 DATA_DIR = BASE_DIR / 'data'
 DATA_DIR.mkdir(exist_ok=True)
-
-print(BASE_DIR)
-print(SRC_DIR)
+POSTS_DIR = DATA_DIR / 'posts'
+POSTS_ALL_DIR = POSTS_DIR / 'all'
+POSTS_FILTERED_DIR = POSTS_DIR / 'filtered'
+COMMENTS_DIR = DATA_DIR / 'comments'
+RESULTS_DIR = BASE_DIR / 'results'
 
 # CUSTOM LIBRARIES
 import utils
@@ -66,4 +64,4 @@ subreddits = [s for s in top_subreddits if s in relevant_subreddits]
 n_posts = 1000
 time_filter = 'year'  
 
-retrieved_posts = utils.fetch_posts_from_subreddits(subreddits, n_posts, time_filter, to_json=False)
+retrieved_posts = utils.fetch_posts_from_subreddits(subreddits, n_posts, time_filter, to_json=False, dir=POSTS_ALL_DIR)

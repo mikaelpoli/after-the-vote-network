@@ -1,5 +1,6 @@
 """ SETUP """
 # LIBRARIES
+import copy
 import json
 import pandas as pd
 from pathlib import Path
@@ -8,16 +9,26 @@ import time
 import tqdm
 
 # DIRECTORIES
-BASE_DIR = Path(__file__).resolve().parent.parent
+try:
+    BASE_DIR = Path(__file__).resolve().parent
+except NameError:
+    BASE_DIR = Path().resolve()
+
 SRC_DIR = BASE_DIR / 'src'
-sys.path.append(str(SRC_DIR))
+if str(SRC_DIR) not in sys.path:
+    sys.path.append(str(SRC_DIR))
+
 DATA_DIR = BASE_DIR / 'data'
 DATA_DIR.mkdir(exist_ok=True)
+POSTS_DIR = DATA_DIR / 'posts'
+POSTS_ALL_DIR = POSTS_DIR / 'all'
+POSTS_FILTERED_DIR = POSTS_DIR / 'filtered'
+COMMENTS_DIR = DATA_DIR / 'comments'
 RESULTS_DIR = BASE_DIR / 'results'
 
 
 """ FUNCTIONS """
-def fetch_posts_from_subreddits(subreddits, n_posts, time_filter, to_json=True):
+def fetch_posts_from_subreddits(subreddits, n_posts, time_filter, to_json=True, dir=None):
     retrieved_posts = {}
     for subreddit in subreddits:
         key = subreddit.display_name
@@ -47,7 +58,7 @@ def fetch_posts_from_subreddits(subreddits, n_posts, time_filter, to_json=True):
         
         # Save to JSON
         if to_json:
-            filename = DATA_DIR / f'{key}.json'
+            filename = dir / f'{key}.json'
             with open(filename, 'w', encoding='utf-8') as f:
                 json.dump(unique_posts_list, f, ensure_ascii=False, indent=2)
             print(f"Saved {len(unique_posts_list)} posts from r/{key} to JSON")
@@ -55,18 +66,26 @@ def fetch_posts_from_subreddits(subreddits, n_posts, time_filter, to_json=True):
     return retrieved_posts
 
 
-def filter_posts_by_date(start_date, end_date, dataframes):
-    for key, df, in dataframes.items():
+def filter_posts_by_date(start_date, end_date, dataframes, to_json=True, dir=None):
+    dfs = copy.deepcopy(dataframes)
+    for key, df, in dfs.items():
         df['created_datetime'] = pd.to_datetime(df['created_utc'], unit='s')
         filtered_df = df[(df['created_datetime'] >= start_date) & (df['created_datetime'] <= end_date)]
-        dataframes[key] = filtered_df
+        filtered_df['created_datetime'] = filtered_df['created_datetime'].astype(str)
+        dfs[key] = filtered_df
         print(f"After filtering '{key}': {len(filtered_df)} posts")
-    
+
+        if to_json:
+            filename = dir / f'{key}_filtered.json'
+            with open(filename, 'w', encoding='utf-8') as f:
+                json.dump(filtered_df.to_dict(orient='records'), f, ensure_ascii=False, indent=2)
+            print(f"Saved {len(filtered_df)} filtered posts from r/{key} to JSON")
+
     print("Filtered dataframes by date.")
-    return dataframes
+    return dfs
 
 
-def fetch_comments_from_subreddit(api, posts_df, to_json=True):
+def fetch_comments_from_subreddit(api, posts_df, to_json=True, dir=None):
     comments = {}
     for key, df in posts_df.items():
         comments_list = []
@@ -96,7 +115,7 @@ def fetch_comments_from_subreddit(api, posts_df, to_json=True):
 
         # Save to JSON
         if to_json:
-            filename = DATA_DIR / f'{key}_comments.json'
+            filename = dir / f'{key}_comments.json'
             with open(filename, 'w', encoding='utf-8') as f:
                 json.dump(unique_comments_list, f, ensure_ascii=False, indent=2)
             print(f"Saved {len(unique_comments_list)} comments from r/{key} to JSON")
