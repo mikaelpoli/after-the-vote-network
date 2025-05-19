@@ -3,7 +3,6 @@
 from bs4 import BeautifulSoup
 import contractions
 import emoji
-import json
 from nltk.tokenize import sent_tokenize
 from pathlib import Path
 import re
@@ -42,14 +41,12 @@ class CleanText:
         tic = time.time()
         self.text = list(text)
         self.sentence_split = sentence_split
-        sup_clean = [self._superficial_cleaning(i) for i in tqdm(self.text, desc="Superficial cleaning")]
+        sup_clean = [self._superficial_cleaning(i) for i in self.text]
         if sentence_split:
             sup_clean = [sent_tokenize(i) for i in sup_clean]
             sup_clean = [item for sublist in sup_clean for item in sublist]  # Flatten
-        self.text_clean = [self._deep_cleaning(i, POS_KEEP) for i in tqdm(sup_clean, desc="Deep cleaning")]
-        # self.pos_clean = [self._deep_cleaning_pos(i, POS_KEEP) for i in tqdm(sup_clean, desc="POS cleaning")]
-        self.pos_clean = [item for i in tqdm(sup_clean, desc="POS cleaning") for item in self._deep_cleaning_pos(i, POS_KEEP)]
-
+        self.text_clean = [self._deep_cleaning(i, POS_KEEP) for i in sup_clean]
+        self.pos_clean = [self._deep_cleaning_pos(i, POS_KEEP) for i in sup_clean]
         print(f'Cleaning text: execution time {time.time() - tic:.2f} [s]')
 
     def _superficial_cleaning(self, text):
@@ -113,21 +110,14 @@ class CleanText:
                 if token.pos_ in POS_KEEP and not token.is_stop and token.is_alpha]
 
 
-# TO RUN SPACY ON PYTHON 3.11
-if __name__ == "__main__":
-    input_file = sys.argv[1]
-    output_file = sys.argv[2]
+def apply_CleanText(df, col_names, type='posts_title'):
+    if type not in ['posts_title', 'posts_body', 'comments']:
+        raise ValueError("Type must be 'posts_title', 'posts_body', or 'comments'.")
+    
+    col = col_names[type]
+    
+    cleaner = CleanText(df[col].tolist(), sentence_split=False)
+    df[f'{col}_clean'] = cleaner.text_clean
+    df[f'{col}_clean_pos'] = cleaner.pos_clean
 
-    with open(input_file, "r", encoding="utf-8") as f:
-        texts = json.load(f)
-
-    results = []
-    for text in texts:
-        cleaner = CleanText(text)
-        results.append({
-            "text_clean": ' '.join(cleaner.text_clean),
-            "pos_clean": ' '.join(cleaner.pos_clean)
-        })
-
-    with open(output_file, "w", encoding="utf-8") as f:
-        json.dump(results, f, ensure_ascii=False, indent=2)
+    return df
