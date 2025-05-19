@@ -1,6 +1,7 @@
 """ DESCRIPTION """
 # Clean posts' title and selftext (body) for semantic network anaylsis
 
+
 """ SETUP """
 # LIBRARIES
 import json
@@ -49,14 +50,14 @@ for key, value in loaded_data.items():
         posts[key] = pd.DataFrame(value)
     print(f"Length posts df '{key}': {len(posts[key])}")
 
+
+""" PREPROCESS DATA """
 # Get names of columns where relevant text is stored
 col_names = {
     'posts_title': "title",
     'posts_body': "selftext",
 }
 
-
-""" PREPROCESS DATA """
 # POSTS
 # Titles
 posts_titles_clean = prep.clean_data(posts, 
