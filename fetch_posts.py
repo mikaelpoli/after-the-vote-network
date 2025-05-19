@@ -1,6 +1,7 @@
 """ DESCRIPTION """
 # Download Top posts for selected subreddits Reddit's API
 
+
 """ SETUP """
 # LIBRARIES
 from pathlib import Path
@@ -32,6 +33,7 @@ import utils
 keyword = "trans"
 top_n = 5
 
+
 """ AUTHENTICATION """
 reddit = praw.Reddit(
     client_id = input("client_id: "),
@@ -39,6 +41,7 @@ reddit = praw.Reddit(
     user_agent = input("user_agent: "),
     check_for_async = False
 )
+
 
 """ SELECT SUBREDDITS """
 related_subreddits = list(reddit.subreddits.search(keyword))
@@ -59,6 +62,7 @@ print('\n')
 # Keep the most relevant ones
 relevant_subreddits = ['trans', 'asktransgender', 'transgender']
 subreddits = [s for s in top_subreddits if s in relevant_subreddits]
+
 
 """ FETCH POSTS """
 n_posts = 1000

@@ -2,6 +2,7 @@
 # Filter top posts by date for selected subreddits
 # Download comments from filtered posts
 
+
 """ SETUP"""
 # LIBRARIES
 import json
@@ -31,6 +32,7 @@ RESULTS_DIR = BASE_DIR / 'results'
 # CUSTOM LIBRARIES
 import utils
 
+
 """ IMPORT DATA """
 # Load data from JSON
 json_files = list(POSTS_ALL_DIR.glob('*.json'))
@@ -51,6 +53,7 @@ for key, value in loaded_data.items():
 start_date = pd.to_datetime("2024-12-06")
 end_date = pd.to_datetime("2025-05-17")
 top_posts = utils.filter_posts_by_date(start_date, end_date, posts, to_json=True, dir=POSTS_FILTERED_DIR)
+
 
 """ FETCH COMMENTS """
 # AUTHENTICATION
