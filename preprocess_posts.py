@@ -73,4 +73,30 @@ posts_selftext_clean = prep.clean_data(posts_titles_clean,
                                        clean_type='posts_body',
                                        sentence_split=True,
                                        use_spellcheck=True,
-                                       to_json=True, dir=POSTS_FILTERED_CLEAN_DIR)
+                                       to_json=False)
+
+
+# KEEP RELEVANT COLUMNS
+columns_to_keep = [
+    "subreddit",
+    "upvote_ratio",
+    "ups",
+    "created_utc",
+    "num_comments",
+    "id",
+    "title_clean",
+    "title_clean_pos",
+    "selftext_clean",
+    "selftext_clean_pos"
+]
+
+# Filter each dataframe in the dictionary
+for key in posts_selftext_clean:
+    posts_selftext_clean[key] = posts_selftext_clean[key][columns_to_keep]
+
+# Save to JSON
+for key, df in posts_selftext_clean.items():
+    filename = POSTS_FILTERED_CLEAN_DIR / f'{key}_clean.json'
+    with open(filename, 'w', encoding='utf-8') as f:
+        json.dump(df.to_dict(orient='records'), f, ensure_ascii=False, indent=2)
+    print(f"Saved {len(df)} comments from r/{key} to JSON")
