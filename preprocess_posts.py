@@ -98,5 +98,5 @@ for key in posts_selftext_clean:
 for key, df in posts_selftext_clean.items():
     filename = POSTS_FILTERED_CLEAN_DIR / f'{key}_clean.json'
     with open(filename, 'w', encoding='utf-8') as f:
-        json.dump(df.to_dict(orient='records'), f, ensure_ascii=False, indent=2)
+        json.dump(df.to_dict(orient='records'), f, ensure_ascii=True, indent=2)
     print(f"Saved {len(df)} comments from r/{key} to JSON")
