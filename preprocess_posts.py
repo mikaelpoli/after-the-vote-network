@@ -65,7 +65,7 @@ posts_titles_clean = prep.clean_data(posts,
                                      clean_type='posts_title',
                                      sentence_split=False,
                                      use_spellcheck=True,
-                                     to_json=True, dir=POSTS_FILTERED_CLEAN_DIR)
+                                     to_json=False)
 
 # Selftext (body)
 posts_selftext_clean = prep.clean_data(posts_titles_clean, 

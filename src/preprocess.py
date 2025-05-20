@@ -34,7 +34,8 @@ RESULTS_DIR = BASE_DIR / 'results'
 
 
 """ FUNCTIONS """
-nlp = spacy.load("en_core_web_sm")
+# Load NLP model
+nlp = spacy.load("en_core_web_sm")  # Switch to "en_core_web_trf" for better performance if GPU is available
 spell = SpellChecker()
 
 
@@ -44,92 +45,90 @@ def safe_correct(w):
 
 
 class CleanText:
-    def __init__(self, text, POS_KEEP=["ADJ", "ADV", "NOUN", "PROPN", "VERB"], sentence_split=False, use_spellcheck=True):
+    def __init__(self, text, POS_KEEP=["ADJ", "ADV", "PRON", "NOUN", "PROPN", "VERB"],
+                 sentence_split=False, use_spellcheck=True):
+
         tic = time.time()
-        self.text = list(text)
+        self.raw_texts = list(text)
+        self.POS_KEEP = POS_KEEP
         self.sentence_split = sentence_split
         self.use_spellcheck = use_spellcheck
 
-        # Step 1: Superficial cleaning
-        sup_clean = [self._superficial_cleaning(i) for i in self.text]
-        if sentence_split:
-            sup_clean = [sent_tokenize(i) for i in sup_clean]
-            sup_clean = [item for sublist in sup_clean for item in sublist]  # Flatten
+        # Step 1: Superficial cleaning (preserve casing for spaCy)
+        cleaned_texts = [self._superficial_cleaning(t) for t in self.raw_texts]
 
-        # Step 2: Deep cleaning
-        self.text_clean = [self._deep_cleaning(i, POS_KEEP) for i in sup_clean]
-        self.pos_clean = [self._deep_cleaning_pos(i, POS_KEEP) for i in sup_clean]
+        # Step 2: Optional sentence splitting
+        if sentence_split:
+            cleaned_texts = [sent_tokenize(t) for t in cleaned_texts]
+            cleaned_texts = [sent for sublist in cleaned_texts for sent in sublist]
+
+        # Step 3: POS filtering and lemmatization (with original casing)
+        self.text_clean = [self._deep_cleaning(t) for t in cleaned_texts]
+        self.pos_clean = [self._deep_cleaning_pos(t) for t in cleaned_texts]
 
         print(f'Cleaning text: execution time {time.time() - tic:.2f} [s]')
 
     def _superficial_cleaning(self, text):
-        # Skip BeautifulSoup if input looks like a URL
+        # Skip cleaning if the whole text is just a URL
         if re.match(r'^\s*(https?://\S+|www\.\S+)\s*$', text):
             return ''
-        
+
         soup = BeautifulSoup(text, "html.parser")
         text = soup.get_text(separator=" ")
 
-        # Remove text inside square brackets
-        text = re.sub(r'\[.*?\]', '', text)
+        text = re.sub(r'\[.*?\]', '', text)  # Remove bracketed content
+        text = re.sub(r'http\S+|www\S+', '', text)  # Remove links
+        text = re.sub(r'[@#]\w+', '', text)  # Remove mentions and hashtags
+        text = unidecode.unidecode(text)  # Normalize accented characters
+        text = contractions.fix(text)  # Expand contractions
+        text = emoji.replace_emoji(text, replace='')  # Remove emojis
+        text = re.sub(r'\d+', '', text)  # Remove digits
 
-        # Remove links
-        text = re.sub(r'http\S+|www\S+', '', text)
-
-        # Remove hashtags, mentions
-        text = re.sub(r'[@#]\w+', '', text)
-
-        # Remove accented characters
-        text = unidecode.unidecode(text)
-
-        # Expand contractions
-        text = contractions.fix(text)
-
-        # Remove emoji
-        text = emoji.replace_emoji(text, replace='')
-
-        # Remove numbers
-        text = re.sub(r'\d+', '', text)
-
-        # Remove moderator messages
+        # Remove common mod-bot messages
         mod_phrases = ['i am a bot', 'automoderator', 'your post has been removed']
         for phrase in mod_phrases:
             if phrase in text.lower():
                 return ''
 
-        # Reduce character repetition
+        # Reduce character repetitions
         text = re.sub(r'([A-Za-z])\1{2,}', r'\1\1', text)
         text = re.sub(r'([.,/#!$%^&*?;:{}=_`~()])\1{1,}', r'\1', text)
 
-        # Remove punctuation except sentence-ending ones
+        # Remove non-sentence punctuation
         text = re.sub(r'[^\w\s\.\!\?]', '', text)
 
-        # Remove extra whitespace
+        # Normalize whitespace
         text = re.sub(r'\s+', ' ', text).strip()
 
-        # Lowercase
-        text = text.lower()
+        return text  # Note: Keep original casing here
 
-        # Spell correction (optional due to cost)
-        words = text.split()
+    def _deep_cleaning(self, text):
+        doc = nlp(text)
+        words = [
+            token.lemma_ for token in doc
+            if token.pos_ in self.POS_KEEP and token.is_alpha and (
+                token.pos_ != "PRON" or True  # Keep PRONs even if stopwords
+            )
+        ]
+
         if self.use_spellcheck:
-            corrected = [safe_correct(w) if w not in spell and len(w) > 3 else w for w in words]
-        else:
-            corrected = words
+            words = [
+                safe_correct(w) if w not in spell and len(w) > 3 else w
+                for w in words
+            ]
 
-        return ' '.join(corrected)
+        return ' '.join(words).lower()
 
-    def _deep_cleaning(self, text, POS_KEEP):
-        return ' '.join([
-            token.lemma_ for token in nlp(text)
-            if token.pos_ in POS_KEEP and not token.is_stop and token.is_alpha
-        ])
-
-    def _deep_cleaning_pos(self, text, POS_KEEP):
-        return [' '.join([token.lemma_, token.pos_])
-                for token in nlp(text)
-                if token.pos_ in POS_KEEP and not token.is_stop and token.is_alpha]
-    
+    def _deep_cleaning_pos(self, text):
+        doc = nlp(text)
+        return [
+            f"{token.lemma_.lower()} {token.pos_}"
+            for token in doc
+            if token.pos_ in self.POS_KEEP and token.is_alpha and (
+                token.pos_ != "PRON" or True
+            )
+        ]
+        
 
 def apply_CleanText(df, col_names, type='posts_title', sentence_split=False, use_spellcheck=False):
     if type not in ['posts_title', 'posts_body', 'comments']:
