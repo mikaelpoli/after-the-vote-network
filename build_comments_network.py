@@ -1,5 +1,5 @@
 """ DESCRIPTION """
-# Build the semantic network from clean Reddit posts' title for network anaylsis
+# Build the semantic network from clean Reddit posts' comments for network anaylsis
 
 
 """ SETUP """
