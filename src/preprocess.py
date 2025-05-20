@@ -1,10 +1,13 @@
 """ SETUP """
 # LIBRARIES
 from bs4 import BeautifulSoup
+from collections import Counter
 import contractions
 import emoji
 import json
+import matplotlib.pyplot as plt
 from nltk.tokenize import sent_tokenize
+import numpy as np
 from pathlib import Path
 import re
 import spacy
@@ -162,3 +165,29 @@ def clean_data(dataframes_dict, col_names, clean_type='posts_title', sentence_sp
             print(f"Saved {len(cleaned_data[key])} filtered posts from r/{key} to JSON")
 
     return cleaned_data
+
+
+def count_word_frequencies(df, pos_col='pos_clean'):
+    all_words = [word for post in df[pos_col].dropna() for word in set(post)]
+    word_freq = Counter(all_words)
+    return word_freq
+
+
+def plot_word_frequencies(word_freq, title='Word Frequencies'):
+    word_counts = np.array(sorted(word_freq.values(), reverse=True))
+    
+    plt.figure(figsize=(4, 3))
+    plt.semilogy(word_counts)
+    plt.grid(True)
+    plt.xlabel('Word Index')
+    plt.ylabel('Frequency')
+    plt.title(title)
+    plt.tight_layout()
+    plt.show()
+
+
+def filter_rare_words(df, word_freq, min_freq=5, pos_col='pos_clean'):
+    common_words = {word for word, freq in word_freq.items() if freq >= min_freq}
+    
+    df['filtered_pos'] = df[pos_col].apply(lambda tokens: [word for word in tokens if word in common_words])
+    return df, common_words

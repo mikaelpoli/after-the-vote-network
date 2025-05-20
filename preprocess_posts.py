@@ -75,6 +75,22 @@ posts_selftext_clean = prep.clean_data(posts_titles_clean,
                                        use_spellcheck=True,
                                        to_json=False)
 
+# Concatenate subreddit dataframes
+all_posts_clean = pd.DataFrame()
+for key, df in posts_selftext_clean.items():
+    all_posts_clean = pd.concat([all_posts_clean, df], ignore_index=True)
+
+# Combine words from title and selftext
+all_posts_clean['pos_clean'] = all_posts_clean.apply(
+    lambda row: row['title_clean_pos'] + row['selftext_clean_pos'], axis=1
+)
+
+# REMOVE RARE WORDS
+word_freq = prep.count_word_frequencies(all_posts_clean, pos_col='pos_clean')
+prep.plot_word_frequencies(word_freq, title="Word Frequencies Before Filtering")
+all_posts_clean_filtered, common_words = prep.filter_rare_words(all_posts_clean, word_freq)
+word_freq_filtered = prep.count_word_frequencies(all_posts_clean_filtered, pos_col='filtered_pos')
+prep.plot_word_frequencies(word_freq_filtered, title="Word Frequencies After Filtering")
 
 # KEEP RELEVANT COLUMNS
 columns_to_keep = [
@@ -84,19 +100,13 @@ columns_to_keep = [
     "created_utc",
     "num_comments",
     "id",
-    "title_clean",
-    "title_clean_pos",
-    "selftext_clean",
-    "selftext_clean_pos"
+    "filtered_pos"
 ]
 
-# Filter each dataframe in the dictionary
-for key in posts_selftext_clean:
-    posts_selftext_clean[key] = posts_selftext_clean[key][columns_to_keep]
+posts_clean = all_posts_clean_filtered[columns_to_keep]
 
 # Save to JSON
-for key, df in posts_selftext_clean.items():
-    filename = POSTS_FILTERED_CLEAN_DIR / f'{key}_clean.json'
-    with open(filename, 'w', encoding='utf-8') as f:
-        json.dump(df.to_dict(orient='records'), f, ensure_ascii=True, indent=2)
-    print(f"Saved {len(df)} comments from r/{key} to JSON")
+filename = POSTS_FILTERED_CLEAN_DIR / 'all_posts_clean.json'
+with open(filename, 'w', encoding='utf-8') as f:
+    json.dump(posts_clean.to_dict(orient='records'), f, ensure_ascii=True, indent=2)
+print(f"Saved {len(posts_clean)} posts to JSON")
