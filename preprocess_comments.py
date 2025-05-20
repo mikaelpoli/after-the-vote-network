@@ -61,5 +61,5 @@ comments_clean = prep.clean_data(comments,
                                  col_names,
                                  clean_type='comments',
                                  sentence_split=True,
-                                 use_spellcheck=False,
+                                 use_spellcheck=True,
                                  to_json=True, dir=COMMENTS_CLEAN_DIR)
