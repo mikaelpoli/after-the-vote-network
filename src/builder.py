@@ -154,16 +154,6 @@ class BuildNetwork:
         print(f"--- Power-Law Analysis ({type}) ---")
         print(f"Alpha (scaling exponent): {fit.power_law.alpha:.4f}")
         print(f"xmin (cutoff): {fit.power_law.xmin}")
-        
-        # Compare to lognormal
-        R, p = fit.distribution_compare('power_law', 'lognormal')
-        print(f"Power law vs lognormal: R = {R:.4f}, p = {p:.4f}")
-        if R > 0 and p < 0.05:
-            print("→ Power law is a significantly better fit than lognormal.")
-        elif R < 0 and p < 0.05:
-            print("→ Lognormal is a significantly better fit than power law.")
-        else:
-            print("→ No significant difference between power law and lognormal.")
 
         # Plot
         if plot:
@@ -227,3 +217,27 @@ def to_networkx_bipartite(builder, use='Pwd'):
                 B.add_edge(word, doc, weight=weight)
 
     return B
+
+
+def to_networkx_word_projection(builder, use='Pww', threshold=0.0):
+    if use not in ['Pww']:
+        raise ValueError("'use' must be 'Pww'")
+    
+    G = nx.Graph()
+    words = builder.words
+    matrix = getattr(builder, use)
+    num_words = matrix.shape[0]
+
+    # Add word nodes
+    G.add_nodes_from(words)
+
+    # Add edges (symmetric matrix)
+    for i in range(num_words):
+        for j in range(i + 1, num_words):  # Avoid duplicates
+            weight = matrix[i, j]
+            if weight > threshold:
+                word_i = words[i]
+                word_j = words[j]
+                G.add_edge(word_i, word_j, weight=weight)
+
+    return G
