@@ -31,8 +31,6 @@ RESULTS_DIR = BASE_DIR / 'results'
 RESULTS_GRAPHS_DIR = RESULTS_DIR / 'graphs'
 
 # CUSTOM LIBRARIES
-import utils
-import preprocess as prep
 import build_network as bn
 
 
@@ -42,15 +40,13 @@ import build_network as bn
 filename = POSTS_FILTERED_CLEAN_DIR / 'all_posts_clean.json'
 posts = pd.read_json(filename)
 
-print(posts)
-
 
 """ BUILD BIPARTITE NETWORK """
-builder = bn.BuildNetwork(posts)
-builder.build(tfidf=False)
+network = bn.BuildNetwork(posts)
+network.build(tfidf=False)
 
 # Build bipartite graph
-G = bn.to_networkx_bipartite(builder, use='Pwd')
+G = bn.to_networkx_bipartite(network, use='Pwd')
 
 # Visualize or analyze
 print(f"Graph has {G.number_of_nodes()} nodes and {G.number_of_edges()} edges.")
@@ -58,3 +54,9 @@ print(f"Graph has {G.number_of_nodes()} nodes and {G.number_of_edges()} edges.")
 # Save to Gephi-compatible format
 filename = RESULTS_GRAPHS_DIR / 'posts.gexf'
 nx.write_gexf(G, filename)
+
+""" ANALYZE DEGREE DISTRIBUTION """
+network.plot_degree_distribution(type='words')
+network.plot_degree_distribution(type='documents')
+network.analyze_degree_distribution_powerlaw(type='words')
+network.analyze_degree_distribution_powerlaw(type='documents')

@@ -2,10 +2,12 @@
 # LIBRARIES
 from collections import defaultdict
 from pathlib import Path
+import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import pandas as pd
 import pickle
+import powerlaw
 from sklearn.feature_extraction.text import TfidfTransformer
 import sys
 
@@ -31,7 +33,7 @@ RESULTS_DIR = BASE_DIR / 'results'
 
 """ FUNCTIONS """
 class BuildNetwork:
-    def __init__(self, df: pd.DataFrame, column: str = "filtered_pos"):
+    def __init__(self, df, column="filtered_pos"):
         self.df = df
         self.column = column
         self.words = []
@@ -64,7 +66,7 @@ class BuildNetwork:
         self.word_index = {word: i for i, word in enumerate(self.words)}
         return doc_word_counts
 
-    def build(self, tfidf: bool = False):
+    def build(self, tfidf=False):
         doc_word_counts = self._build_vocab_and_counts()
         num_words = len(self.words)
         num_docs = len(self.documents)
@@ -102,7 +104,80 @@ class BuildNetwork:
         self.Pww = self.Pwd @ prob_d_inv @ self.Pwd.T
         self.Pdd = self.Pwd.T @ prob_w_inv @ self.Pwd
 
-    def pickle_export(self, filename: str):
+    def plot_degree_distribution(self, type='words'):
+        if self.Mwd is None:
+            raise ValueError("Mwd matrix not built yet. Run the build() method first.")
+
+        if type == 'words':
+            degrees = np.squeeze(np.asarray(self.Mwd.sum(axis=1)))  # sum over documents
+            title = "Degree Distribution for Words"
+        elif type == 'documents':
+            degrees = np.squeeze(np.asarray(self.Mwd.sum(axis=0)))  # sum over words
+            title = "Degree Distribution for Documents"
+        else:
+            raise ValueError("type must be either 'words' or 'documents'")
+
+        # Compute degree histogram
+        k = np.unique(degrees)
+        pk = np.histogram(degrees, bins=np.append(k, k[-1] + 1))[0]
+        pk = pk / pk.sum()  # normalize
+
+        # Plot on log-log scale
+        plt.figure(figsize=(4, 3))
+        plt.loglog(k, pk, 'o', markersize=5)
+        plt.title(title)
+        plt.xlabel("k (degree)")
+        plt.ylabel("p(k)")
+        plt.grid(True, which="both", ls="--", lw=0.5)
+        plt.tight_layout()
+        plt.show()
+
+    def analyze_degree_distribution_powerlaw(self, type='words', plot=True):
+        if self.Mwd is None:
+            raise ValueError("Mwd matrix not built yet. Call build() first.")
+
+        # Get degrees
+        if type == 'words':
+            degrees = np.squeeze(np.asarray(self.Mwd.sum(axis=1)))  # word degrees
+        elif type == 'documents':
+            degrees = np.squeeze(np.asarray(self.Mwd.sum(axis=0)))  # doc degrees
+        else:
+            raise ValueError("type must be 'words' or 'documents'")
+
+        # Remove zeros
+        degrees = degrees[degrees > 0]
+
+        # Fit power-law model
+        fit = powerlaw.Fit(degrees, discrete=True, verbose=False)
+
+        # Print summary
+        print(f"--- Power-Law Analysis ({type}) ---")
+        print(f"Alpha (scaling exponent): {fit.power_law.alpha:.4f}")
+        print(f"xmin (cutoff): {fit.power_law.xmin}")
+        
+        # Compare to lognormal
+        R, p = fit.distribution_compare('power_law', 'lognormal')
+        print(f"Power law vs lognormal: R = {R:.4f}, p = {p:.4f}")
+        if R > 0 and p < 0.05:
+            print("→ Power law is a significantly better fit than lognormal.")
+        elif R < 0 and p < 0.05:
+            print("→ Lognormal is a significantly better fit than power law.")
+        else:
+            print("→ No significant difference between power law and lognormal.")
+
+        # Plot
+        if plot:
+            fig = fit.plot_pdf(label='Empirical', color='blue')
+            fit.power_law.plot_pdf(label='Power law fit', color='red', ax=fig)
+            plt.title(f"Power-Law Fit ({type})")
+            plt.xlabel("Degree (k)")
+            plt.ylabel("p(k)")
+            plt.legend()
+            plt.grid(True)
+            plt.tight_layout()
+            plt.show()
+
+    def pickle_export(self, filename):
         out_data = {
             'words': self.words,
             'documents': self.documents,
@@ -116,7 +191,7 @@ class BuildNetwork:
         with open(filename, 'wb') as f:
             pickle.dump(out_data, f)
 
-    def pickle_import(self, filename: str):
+    def pickle_import(self, filename):
         with open(filename, 'rb') as f:
             in_data = pickle.load(f)
         self.words = in_data['words']
