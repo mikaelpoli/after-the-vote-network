@@ -11,6 +11,7 @@ numpy
 pandas
 praw
 pyspellchecker
+python-louvain
 scikit-learn
 scipy
 seaborn
