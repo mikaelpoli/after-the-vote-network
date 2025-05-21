@@ -92,6 +92,9 @@ all_posts_clean_filtered, common_words = prep.filter_rare_words(all_posts_clean,
 word_freq_filtered = prep.count_word_frequencies(all_posts_clean_filtered, pos_col='filtered_pos')
 prep.plot_word_frequencies(word_freq_filtered, title="Word Frequencies After Filtering")
 
+print(f"N documents: {len(all_posts_clean_filtered)}; N words: {len(common_words)}")
+print(f"Total nodes: {len(all_posts_clean_filtered) + len(common_words)}")
+
 # KEEP RELEVANT COLUMNS
 columns_to_keep = [
     "subreddit",
