@@ -40,8 +40,9 @@ json_files = list(COMMENTS_CLEAN_DIR.glob('*.json'))
 loaded_data = {}
 for file in json_files:
     key = Path(file).stem.replace('_clean', '')
-    with open(file, 'r', encoding='utf-8') as f:
-        loaded_data[key] = json.load(f)
+    if key != 'all_comments':
+        with open(file, 'r', encoding='utf-8') as f:
+            loaded_data[key] = json.load(f)
 
 # Convert to df
 comments = {}
@@ -82,6 +83,7 @@ print(f"N documents: {len(all_comments_clean_filtered)}; N words: {len(common_wo
 print(f"Total nodes: {len(all_comments_clean_filtered) + len(common_words)}")
 
 # KEEP RELEVANT COLUMNS
+"""
 columns_to_keep = [
     "subreddit",
     "comment_id",
@@ -90,11 +92,12 @@ columns_to_keep = [
     "comment_body",
     "filtered_pos"
 ]
+"""
 
-comments_clean = all_comments_clean_filtered[columns_to_keep]
+# comments_clean = all_comments_clean_filtered[columns_to_keep]
 
 # Save to JSON
 filename = COMMENTS_CLEAN_DIR / 'all_comments_clean.json'
 with open(filename, 'w', encoding='utf-8') as f:
-    json.dump(comments_clean.to_dict(orient='records'), f, ensure_ascii=True, indent=2)
-print(f"Saved {len(comments_clean)} comments to JSON")
+    json.dump(all_comments_clean_filtered.to_dict(orient='records'), f, ensure_ascii=True, indent=2)
+print(f"Saved {len(all_comments_clean_filtered)} comments to JSON")
