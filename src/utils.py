@@ -2,6 +2,8 @@
 # LIBRARIES
 import copy
 import json
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 from pathlib import Path
 import sys
@@ -121,3 +123,26 @@ def fetch_comments_from_subreddit(api, posts_df, to_json=True, dir=None):
             print(f"Saved {len(unique_comments_list)} comments from r/{key} to JSON")
     
     return comments
+
+
+def plot_giant_component_degree_distribution(graph):
+    if graph is None or graph.vcount() == 0:
+        raise ValueError("Input graph is empty or None.")
+
+    # Compute degrees
+    degrees = np.array(graph.degree())
+
+    # Degree histogram (normalized)
+    k = np.unique(degrees)
+    pk = np.histogram(degrees, bins=np.append(k, k[-1] + 1))[0]
+    pk = pk / pk.sum()
+
+    # Plot on log-log scale
+    plt.figure(figsize=(4, 3))
+    plt.loglog(k, pk, 'o', markersize=5)
+    plt.title("Degree Distribution (Giant Component)")
+    plt.xlabel("k (degree)")
+    plt.ylabel("p(k)")
+    plt.grid(True, which="both", ls="--", lw=0.5)
+    plt.tight_layout()
+    plt.show()

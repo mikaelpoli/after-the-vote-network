@@ -2,6 +2,7 @@
 # LIBRARIES
 from collections import defaultdict
 from pathlib import Path
+import igraph as ig
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
@@ -152,8 +153,8 @@ class BuildNetwork:
 
         # Print summary
         print(f"--- Power-Law Analysis ({type}) ---")
-        print(f"Alpha (scaling exponent): {fit.power_law.alpha:.4f}")
-        print(f"xmin (cutoff): {fit.power_law.xmin}")
+        print(f"Gamma (scaling exponent): {fit.power_law.alpha:.4f}")
+        print(f"K_min (cutoff): {fit.power_law.xmin}")
 
         # Plot
         if plot:
@@ -194,50 +195,67 @@ class BuildNetwork:
         self.pw = in_data['pw']
 
 
-def to_networkx_bipartite(builder, use='Pwd'):
+def to_igraph_bipartite(builder, use='Pwd'):
     if use not in ['Pwd', 'Mwd']:
         raise ValueError("'use' must be one of 'Pwd' or 'Mwd'")
     
-    B = nx.Graph()
     words = builder.words
     documents = builder.documents
     matrix = getattr(builder, use)
 
     num_words, num_docs = matrix.shape
 
-    # Add nodes with bipartite attribute
-    B.add_nodes_from(words, bipartite='word')
-    B.add_nodes_from(documents, bipartite='document')
+    # Create node attributes
+    vertices = words + documents
+    bipartite_attr = ['word'] * num_words + ['document'] * num_docs
 
-    # Add edges
+    # Create edges
+    edges = []
+    edge_weights = []
     for i, word in enumerate(words):
         for j, doc in enumerate(documents):
             weight = matrix[i, j]
             if weight > 0:
-                B.add_edge(word, doc, weight=weight)
+                edges.append((i, num_words + j))  # i for word, offset by num_words for doc
+                edge_weights.append(weight)
 
-    return B
+    # Build iGraph object
+    g = ig.Graph(edges=edges)
+    g.add_vertices(len(vertices) - len(g.vs))  # Ensure correct number of vertices
+    g.vs['name'] = vertices
+    g.vs['bipartite'] = bipartite_attr
+    g.es['weight'] = edge_weights
+
+    return g
 
 
-def to_networkx_word_projection(builder, use='Pww', threshold=0.0):
-    if use not in ['Pww']:
-        raise ValueError("'use' must be 'Pww'")
-    
-    G = nx.Graph()
-    words = builder.words
+def to_igraph_projected(builder, use='Pww', threshold=0.0):
+    if use not in ['Pww', 'Pdd']:
+        raise ValueError("'use' must be 'Pww' or 'Pdd'")
+
+    # Determine whether it's a word or document projection
+    if use == 'Pww':
+        nodes = builder.words
+    elif use == 'Pdd':
+        nodes = builder.documents
+
     matrix = getattr(builder, use)
-    num_words = matrix.shape[0]
+    num_nodes = matrix.shape[0]
 
-    # Add word nodes
-    G.add_nodes_from(words)
-
-    # Add edges (symmetric matrix)
-    for i in range(num_words):
-        for j in range(i + 1, num_words):  # Avoid duplicates
+    # Create edges (upper triangle only, no self-loops)
+    edges = []
+    edge_weights = []
+    for i in range(num_nodes):
+        for j in range(i + 1, num_nodes):
             weight = matrix[i, j]
             if weight > threshold:
-                word_i = words[i]
-                word_j = words[j]
-                G.add_edge(word_i, word_j, weight=weight)
+                edges.append((i, j))
+                edge_weights.append(weight)
 
-    return G
+    # Build iGraph object
+    g = ig.Graph(edges=edges)
+    g.add_vertices(len(nodes) - len(g.vs))  # Ensure correct number of vertices
+    g.vs['name'] = nodes
+    g.es['weight'] = edge_weights
+
+    return g
