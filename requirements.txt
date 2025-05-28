@@ -5,7 +5,6 @@ igraph
 ipython
 leidenalg
 matplotlib
-networkx
 nltk
 numpy
 pandas
