@@ -57,6 +57,7 @@ def compute_ncp(graph, sizes, num_seeds=10):
     ncp = []
     for k in sizes:
         best_phi = 1.0
+        np.random.seed(42)
         seeds = np.random.choice(graph.vs.indices, num_seeds, replace=False)
         for seed in seeds:
             for comm in local_pagerank_sweep(graph, seed):

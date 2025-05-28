@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from scipy.stats import linregress
 import sys
 import time
 import tqdm
@@ -146,3 +147,28 @@ def plot_giant_component_degree_distribution(graph):
     plt.grid(True, which="both", ls="--", lw=0.5)
     plt.tight_layout()
     plt.show()
+
+
+def plot_ccdf(graph):
+    degrees = graph.degree()
+    degree_values = np.sort(np.unique(degrees))
+    ccdf = [np.sum(np.array(degrees) >= k) / len(degrees) for k in degree_values]
+    ccdf = np.array(ccdf)
+
+    # Only fit the tail (degrees > 10)
+    mask = degree_values > 10
+    log_x = np.log10(degree_values[mask])
+    log_y = np.log10(ccdf[mask])
+    slope, intercept, _ , _ , _ = linregress(log_x, log_y)
+
+    # Plot the fit line
+    plt.figure(figsize=(6,4))
+    plt.loglog(degree_values, ccdf, marker='o', linestyle='none', label='CCDF')
+    plt.loglog(degree_values[mask], 10**(intercept + slope * log_x), linestyle='--', color='orange', label=f'Fit slope={slope:.2f}')
+    plt.xlabel('Degree')
+    plt.ylabel('CCDF')
+    plt.title('CCDF with Power-Law Fit')
+    plt.legend()
+    plt.show()
+
+
