@@ -82,20 +82,6 @@ prep.plot_word_frequencies(word_freq_filtered, title="Word Frequencies After Fil
 print(f"N documents: {len(all_comments_clean_filtered)}; N words: {len(common_words)}")
 print(f"Total nodes: {len(all_comments_clean_filtered) + len(common_words)}")
 
-# KEEP RELEVANT COLUMNS
-"""
-columns_to_keep = [
-    "subreddit",
-    "comment_id",
-    "parent_id",
-    "post_id",
-    "comment_body",
-    "filtered_pos"
-]
-"""
-
-# comments_clean = all_comments_clean_filtered[columns_to_keep]
-
 # Save to JSON
 filename = COMMENTS_CLEAN_DIR / 'all_comments_clean.json'
 with open(filename, 'w', encoding='utf-8') as f:

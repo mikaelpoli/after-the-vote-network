@@ -95,21 +95,8 @@ prep.plot_word_frequencies(word_freq_filtered, title="Word Frequencies After Fil
 print(f"N documents: {len(all_posts_clean_filtered)}; N words: {len(common_words)}")
 print(f"Total nodes: {len(all_posts_clean_filtered) + len(common_words)}")
 
-# KEEP RELEVANT COLUMNS
-columns_to_keep = [
-    "subreddit",
-    "upvote_ratio",
-    "ups",
-    "created_utc",
-    "num_comments",
-    "id",
-    "filtered_pos"
-]
-
-posts_clean = all_posts_clean_filtered[columns_to_keep]
-
 # Save to JSON
 filename = POSTS_FILTERED_CLEAN_DIR / 'all_posts_clean.json'
 with open(filename, 'w', encoding='utf-8') as f:
-    json.dump(posts_clean.to_dict(orient='records'), f, ensure_ascii=True, indent=2)
-print(f"Saved {len(posts_clean)} posts to JSON")
+    json.dump(all_posts_clean_filtered.to_dict(orient='records'), f, ensure_ascii=True, indent=2)
+print(f"Saved {len(all_posts_clean_filtered)} posts to JSON")
