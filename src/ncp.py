@@ -2,9 +2,9 @@
 # LIBRARIES
 from pathlib import Path
 import igraph as ig
+from joblib import Parallel, delayed
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 import sys
 
 
@@ -35,49 +35,73 @@ def threshold_graph(graph, percentile=90):
     return graph.subgraph_edges(edges_to_keep, delete_vertices=False)
 
 
-def conductance(graph, subset):
-    subset_set = set(subset)
-    cut_size = 0.0
-    for v in subset:
-        for e in graph.es.select(_source=v):
-            if e.target not in subset_set:
-                cut_size += e["weight"]
-    vol_S = sum(graph.strength(subset))  # Sum of weighted degrees
-    vol_rest = sum(graph.strength()) - vol_S
+def conductance(graph, subset, sources, targets, weights):
+    in_subset = np.zeros(graph.vcount(), dtype=bool)
+    in_subset[subset] = True
+
+    in_S = in_subset[sources]
+    in_S_target = in_subset[targets]
+    cut_mask = np.logical_xor(in_S, in_S_target)
+
+    cut_size = weights[cut_mask].sum()
+
+    vol_S = sum(graph.strength(subset, weights="weight"))
+    vol_rest = sum(graph.strength(weights="weight")) - vol_S
+
     return cut_size / min(vol_S, vol_rest) if vol_S and vol_rest else 1
 
 
-def local_pagerank_sweep(graph, seed, alpha=0.85):
-    pr = graph.personalized_pagerank(reset_vertices=[seed], damping=alpha)
+def process_seed(graph, seed, k, sources, targets, weights):
+    pr = graph.personalized_pagerank(reset_vertices=[seed], damping=0.85)
     sorted_nodes = np.argsort(pr)[::-1]
-    return [sorted_nodes[:k].tolist() for k in range(1, len(sorted_nodes)+1)]
+    comm = sorted_nodes[:k].tolist()
+    phi = conductance(graph, comm, sources, targets, weights)
+    return phi
 
 
-def compute_ncp(graph, sizes, num_seeds=10):
+def compute_ncp(graph, sizes, num_seeds=10, n_jobs=-1, verbose=True):
+    np.random.seed(42)
     ncp = []
+
+    # Precompute edge arrays once
+    sources = np.array([e.source for e in graph.es])
+    targets = np.array([e.target for e in graph.es])
+    weights = np.array(graph.es["weight"])
+
     for k in sizes:
-        best_phi = 1.0
-        np.random.seed(42)
         seeds = np.random.choice(graph.vs.indices, num_seeds, replace=False)
-        for seed in seeds:
-            for comm in local_pagerank_sweep(graph, seed):
-                if len(comm) >= k:
-                    phi = conductance(graph, comm[:k])
-                    if phi < best_phi:
-                        best_phi = phi
-                    break
+
+        # Parallel computation
+        phis = Parallel(n_jobs=n_jobs)(
+            delayed(process_seed)(graph, seed, k, sources, targets, weights)
+            for seed in seeds
+        )
+
+        best_phi = min(phis)
         ncp.append(best_phi)
+
+        if verbose:
+            print(f"Size {k}: best conductance = {best_phi:.4f}")
+
     return ncp
 
 
-def plot_ncp(ncp_90, ncp_95, ncp_99, sizes):
+def plot_ncp(sizes, ncp_data, thresholds, title="Network Community Profile for Different Thresholds"):
+    """
+    Parameters:
+    - sizes: list or array of community sizes.
+    - ncp_data: list of lists/arrays, each representing conductance values for a threshold.
+    - thresholds: list of threshold identifiers (e.g., [90, 95, 99]).
+    """
     plt.figure(figsize=(8, 5))
-    plt.plot(sizes, ncp_90, label="90th percentile threshold")
-    plt.plot(sizes, ncp_95, label="95th percentile threshold")
-    plt.plot(sizes, ncp_99, label="99th percentile threshold")
+    
+    for ncp, threshold in zip(ncp_data, thresholds):
+        label = f"{threshold}th percentile threshold"
+        plt.plot(sizes, ncp, label=label)
+    
     plt.xlabel("Community Size")
     plt.ylabel("Minimum Conductance")
-    plt.title("Network Community Profile for Different Thresholds")
+    plt.title(title)
     plt.legend()
     plt.grid(True)
     plt.show()
