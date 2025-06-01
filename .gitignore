@@ -6,3 +6,4 @@ venv/*
 src/data
 results/graphs/g_wd.graphml
 results/graphs/g_ww.graphml
+results/plots/*
