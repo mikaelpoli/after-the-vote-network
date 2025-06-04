@@ -7,6 +7,7 @@ import emoji
 import json
 import matplotlib.pyplot as plt
 from nltk.tokenize import sent_tokenize
+from nltk.corpus import stopwords
 import numpy as np
 from pathlib import Path
 import re
@@ -191,3 +192,29 @@ def filter_rare_words(df, word_freq, min_freq=5, pos_col='pos_clean'):
     
     df['filtered_pos'] = df[pos_col].apply(lambda tokens: [word for word in tokens if word in common_words])
     return df, common_words
+
+
+def bert_preprocess(text):
+    text = text.lower() # Convert to lowercase
+    text = BeautifulSoup(text, "html.parser").get_text(separator=" ") # Remove HTML tags
+    text = contractions.fix(text) # Expand contractions
+    text = unidecode.unidecode(text) # Normalize accented characters
+
+    # Remove URLs, mentions, hashtags, bracketed content
+    text = re.sub(r"http\S+|www\S+|https\S+", '', text)
+    text = re.sub(r"\[.*?\]", '', text)
+    text = re.sub(r"[@#]\w+", '', text)
+
+    text = emoji.replace_emoji(text, replace='') # Remove emojis
+    text = re.sub(r'\d+', '', text) # Remove digits
+    text = re.sub(r'[^a-z0-9\s]', '', text) # Remove special characters (keep a-z, 0-9, whitespace)
+    text = re.sub(r'([a-z])\1{2,}', r'\1\1', text) # Reduce character and punctuation repetitions
+    text = re.sub(r'\s+', ' ', text).strip() # Normalize whitespace
+
+    # Remove stopwords
+    stop_words = set(stopwords.words('english'))
+    tokens = text.split()
+    tokens = [word for word in tokens if word not in stop_words]
+    text = ' '.join(tokens)
+
+    return text
