@@ -131,3 +131,50 @@ def plot_topic_pattern(num_docs, C):
 
     plt.tight_layout()
     plt.show()
+
+
+def plot_topic_network(bert_model, topic_labels_dict):
+    # Filter out -1 topic and get consistent topic ids
+    topic_info = bert_model.get_topic_info().sort_values("Topic")
+    topic_info = topic_info[topic_info["Topic"] != -1]
+    topic_ids = topic_info["Topic"].tolist()
+
+    # Get embeddings and other info in correct order
+    topic_embeddings = np.array([bert_model.topic_embeddings_[tid] for tid in topic_ids])
+    topic_sizes = topic_info["Count"].values
+    topic_labs = [topic_labels_dict[tid] for tid in topic_ids]
+    vertex_sizes = 0.6 * topic_sizes
+    t_colors = sns.color_palette("colorblind", n_colors=len(topic_sizes))
+
+    # Compute filtered similarity matrix for these topics only
+    topic_sim = cosine_similarity(bert_model.topic_embeddings_)
+    topic_sim_filtered = topic_sim[np.ix_(topic_ids, topic_ids)]
+    np.fill_diagonal(topic_sim_filtered, 0)
+
+    # Build graph from filtered similarity matrix
+    adj_matrix = topic_sim_filtered.copy()
+    G = ig.Graph.Adjacency((adj_matrix > 0.3).tolist(), mode=ig.ADJ_UNDIRECTED)
+    lower_tri = np.tril(adj_matrix, k=-1)
+    G.es['weight'] = lower_tri[adj_matrix.nonzero()]
+
+    # Compute layout on filtered embeddings
+    t_pos = umap.UMAP(random_state=42).fit_transform(topic_embeddings)
+    t_pos = t_pos - t_pos.mean(axis=0)
+
+    # Plot
+    fig, ax = plt.subplots(dpi=400, figsize=(10, 10))  
+    ig.plot(G,
+            target=ax,
+            layout=t_pos.tolist(),
+            vertex_size=vertex_sizes.tolist(),
+            vertex_color=t_colors,
+            vertex_label=topic_labs,
+            vertex_label_size=5,
+            vertex_label_dist=0,
+            vertex_frame_width=0,
+            edge_width=[2 * w for w in G.es['weight']],
+            edge_color='gray',
+            edge_arrow_size=0.001,
+            edge_curved=0.3)
+
+    ax.set_title("BERTopic Topic Network", fontsize=14)
