@@ -94,6 +94,14 @@ def extract_community_assignments(bert_model_topics, topic_ids_start=-1):
     return num_docs, num_topics, C
 
 
+def print_top_docs(topic_number, representative_docs_dict):
+    print(f"Topic {topic_number}\n")
+    counter = 1
+    for v in representative_docs_dict[topic_number]:
+        print(f"\"Document {counter}: {v}\"\n")
+        counter += 1
+
+
 def plot_topic_pattern(num_docs, C):
     # Order topics
     topic_of_doc = C.argmax(axis=1).A1
@@ -133,7 +141,7 @@ def plot_topic_pattern(num_docs, C):
     plt.show()
 
 
-def plot_topic_network(bert_model, topic_labels_dict):
+def plot_topic_network(bert_model, topic_labels_dict, title="BERTopic Topic Network"):
     # Filter out -1 topic and get consistent topic ids
     topic_info = bert_model.get_topic_info().sort_values("Topic")
     topic_info = topic_info[topic_info["Topic"] != -1]
@@ -177,4 +185,4 @@ def plot_topic_network(bert_model, topic_labels_dict):
             edge_arrow_size=0.001,
             edge_curved=0.3)
 
-    ax.set_title("BERTopic Topic Network", fontsize=14)
+    ax.set_title(title, fontsize=14)
