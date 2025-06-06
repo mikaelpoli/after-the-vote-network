@@ -102,7 +102,7 @@ def print_top_docs(topic_number, representative_docs_dict):
         counter += 1
 
 
-def plot_topic_pattern(num_docs, C):
+def plot_topic_pattern(num_docs, C, title_1='BERTopic Relative cluster sizes', title_2='BERTopic Cluster block pattern'):
     # Order topics
     topic_of_doc = C.argmax(axis=1).A1
     order = np.argsort(topic_of_doc)
@@ -116,7 +116,7 @@ def plot_topic_pattern(num_docs, C):
 
     # Left plot: topic size distribution
     ax[0].plot(np.arange(len(rel_sizes)), rel_sizes, 'o-', color='blue')
-    ax[0].set_title('BERTopic Relative cluster sizes')
+    ax[0].set_title(title_1)
     ax[0].set_xlabel('Topic index')
     ax[0].set_ylabel('Proportion of docs')
     ax[0].grid(True)
@@ -135,13 +135,13 @@ def plot_topic_pattern(num_docs, C):
     ax[1].set_aspect('equal')
     ax[1].set_xticks([])
     ax[1].set_yticks([])
-    ax[1].set_title('BERTopic Cluster block pattern')
+    ax[1].set_title(title_2)
 
     plt.tight_layout()
     plt.show()
 
 
-def plot_topic_network(bert_model, topic_labels_dict, title="BERTopic Topic Network"):
+def plot_topic_network(bert_model, topic_labels_dict, vertex_size=0.6, vertex_lab_size=5, title="BERTopic Topic Network"):
     # Filter out -1 topic and get consistent topic ids
     topic_info = bert_model.get_topic_info().sort_values("Topic")
     topic_info = topic_info[topic_info["Topic"] != -1]
@@ -151,7 +151,7 @@ def plot_topic_network(bert_model, topic_labels_dict, title="BERTopic Topic Netw
     topic_embeddings = np.array([bert_model.topic_embeddings_[tid] for tid in topic_ids])
     topic_sizes = topic_info["Count"].values
     topic_labs = [topic_labels_dict[tid] for tid in topic_ids]
-    vertex_sizes = 0.6 * topic_sizes
+    vertex_sizes = vertex_size * topic_sizes
     t_colors = sns.color_palette("colorblind", n_colors=len(topic_sizes))
 
     # Compute filtered similarity matrix for these topics only
@@ -177,7 +177,7 @@ def plot_topic_network(bert_model, topic_labels_dict, title="BERTopic Topic Netw
             vertex_size=vertex_sizes.tolist(),
             vertex_color=t_colors,
             vertex_label=topic_labs,
-            vertex_label_size=5,
+            vertex_label_size=vertex_lab_size,
             vertex_label_dist=0,
             vertex_frame_width=0,
             edge_width=[2 * w for w in G.es['weight']],
