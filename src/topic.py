@@ -1,25 +1,16 @@
 """ SETUP """
 # LIBRARIES
-from bs4 import BeautifulSoup
-from IPython.display import HTML
 from pathlib import Path
 from scipy.sparse import csr_matrix, find, lil_matrix
 from sklearn.metrics.pairwise import cosine_similarity
 import igraph as ig
-import leidenalg
-import matplotlib as mpl
 import matplotlib.cm
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import pickle
-import re
 import scipy.sparse as sps
 import seaborn as sns
-import spacy
-import string
 import sys
-import time
 import umap
 
 
