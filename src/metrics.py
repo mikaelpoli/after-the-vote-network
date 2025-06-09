@@ -4,6 +4,8 @@ from pathlib import Path
 import scipy.sparse as sps
 from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
+import os
+import pandas as pd
 import sys
 import time
 
@@ -98,3 +100,21 @@ def calculate_ncut(A):
 
 def calculate_modularity(Pcc):
     return Pcc.trace() - (Pcc.sum(axis=0) * Pcc.sum(axis=1)).item()
+
+
+def save_results_to_csv(csv_path, metrics, metric_names, model_name):
+    if os.path.exists(csv_path):
+        df = pd.read_csv(csv_path, index_col=0)
+    else:
+        df = pd.DataFrame(index=metric_names)
+
+    # Ensure all metric rows exist (in case new ones were added)
+    for metric in metrics[model_name].keys():
+        if metric not in df.index:
+            df.loc[metric] = np.nan
+
+    # Add or update the model's column
+    for metric, value in metrics[model_name].items():
+        df.loc[metric, model_name] = value
+
+    df.to_csv(csv_path)
