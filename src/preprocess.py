@@ -218,3 +218,7 @@ def bert_preprocess(text):
     text = ' '.join(tokens)
 
     return text
+
+
+def join_word_pos(doc_list):
+    return [token.replace(' ', '_') for token in doc_list]
