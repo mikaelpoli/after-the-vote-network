@@ -4,6 +4,7 @@ emoji
 igraph
 ipython
 leidenalg
+louvain
 matplotlib
 nltk
 numpy
