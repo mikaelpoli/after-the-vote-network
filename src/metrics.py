@@ -38,6 +38,14 @@ def logg(x):
     return y
 
 
+def build_C(topics, with_outliers=2):
+    C = sps.csr_matrix((len(topics),topics.max()+with_outliers))
+    for i in range(C.shape[1]):
+        C[np.array(topics)==(i-1),i] = 1
+    
+    return C
+
+
 def build_probability_matrices(Mwd, topics):
     Mwd = Mwd.astype(np.float64)
 
