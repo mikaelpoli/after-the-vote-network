@@ -38,6 +38,7 @@ class BuildNetwork:
         self.column = column
         self.words = []
         self.documents = df.index.tolist()
+        self.documents_id = df['document_id'].tolist()
         self.word_index = {}
         self.Mwd = None  # Sparse matrix (words x documents)
         self.Pwd = None  # Sparse joint probability matrix
@@ -174,31 +175,39 @@ class BuildNetwork:
             plt.tight_layout()
             plt.show()
 
-    def pickle_export(self, filename):
+    def pickle_export(self, filename, Pww=True):
         out_data = {
             'words': self.words,
             'documents': self.documents,
+            'documents_id': self.documents_id,
             'Mwd': self.Mwd,
             'Pwd': self.Pwd,
-            'Pww': self.Pww,
             'Pdd': self.Pdd,
             'pd': self.pd,
             'pw': self.pw,
         }
+        if Pww and self.Pww is not None:
+            out_data['Pww'] = self.Pww
+
         with open(filename, 'wb') as f:
             pickle.dump(out_data, f)
 
-    def pickle_import(self, filename):
+    def pickle_import(self, filename, Pww=True):
         with open(filename, 'rb') as f:
             in_data = pickle.load(f)
         self.words = in_data['words']
         self.documents = in_data['documents']
+        self.documents_id = in_data['documents_id']
         self.Mwd = in_data['Mwd']
         self.Pwd = in_data['Pwd']
-        self.Pww = in_data['Pww']
         self.Pdd = in_data['Pdd']
         self.pd = in_data['pd']
         self.pw = in_data['pw']
+        
+        if Pww and 'Pww' in in_data:
+            self.Pww = in_data['Pww']
+        else:
+            self.Pww = None
 
 
 def to_igraph_bipartite(builder, use='Pwd'):
@@ -239,7 +248,12 @@ def to_igraph_projected(builder, use='Pww', threshold=0.0):
     if use == 'Pww':
         nodes = builder.words
     else:
-        nodes = builder.documents
+        # Prefer external document IDs if available
+        if hasattr(builder, 'documents_id'):
+            documents = builder.documents_id
+        else:
+            documents = builder.documents
+        nodes = documents
 
     matrix = getattr(builder, use)
 
@@ -288,3 +302,15 @@ def filter_sparse_by_percentile(matrix, percentile):
     filtered_matrix = sp.coo_matrix((data, (rows, cols)), shape=matrix.shape)
     
     return filtered_matrix.tocsr()
+
+
+def filter_network_matrices_by_docs(builder, keep_docs):
+    # Filter document-related vectors and matrices
+    builder.documents = [builder.documents[i] for i in keep_docs]
+    builder.documents_id = [builder.documents_id[i] for i in keep_docs]
+
+    builder.Mwd = builder.Mwd[:, keep_docs]
+    builder.Pw_d = builder.Pw_d[:, keep_docs]
+    builder.Pwd = builder.Pwd[:, keep_docs]
+    builder.Pdd = builder.Pdd[keep_docs, :][:, keep_docs]
+    builder.pd = builder.pd[keep_docs]
