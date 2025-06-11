@@ -38,50 +38,6 @@ def logg(x):
     return y
 
 
-def build_C(topics, with_outliers=2):
-    C = sps.csr_matrix((len(topics),topics.max()+with_outliers))
-    for i in range(C.shape[1]):
-        C[np.array(topics)==(i-1),i] = 1
-    
-    return C
-
-
-def build_probability_matrices(Mwd, topics):
-    Mwd = Mwd.astype(np.float64)
-
-    # Remove outlier documents
-    topics = np.array(topics)
-    valid_idx = topics != -1
-    topics = topics[valid_idx]
-    Mwd = Mwd[:, valid_idx]
-    
-    n_words, n_docs = Mwd.shape
-    n_topics = topics.max() + 1
-
-    # Document-topic matrix
-    rows = np.arange(n_docs)
-    cols = topics
-    data = np.ones(n_docs)
-    C = sps.csr_matrix((data, (rows, cols)), shape=(n_docs, n_topics))
-
-    # Compute P(w,d)
-    Pwd = Mwd / Mwd.sum()
-
-    # Compute P(w,c)
-    Pwc = Pwd @ C
-    Pwc = Pwc / Pwc.sum()
-
-    # Compute P(d,d)
-    pw = Pwd.sum(axis=1).flatten()  # p(w)
-    pw[pw == 0] = 1                 # Avoid division by 0
-    Pdd = (Pwd.T / pw) @ Pwd        # shape: (n_docs, n_docs)
-
-    # Compute P(c,c)
-    Pcc = C.T @ Pdd @ C
-
-    return Pwc, Pdd, Pcc
-
-
 def calculate_nmi(Pwc):
     aw = Pwc.sum(axis=1).flatten()  # Word marginal probs
     ac = Pwc.sum(axis=0).flatten()  # Topic marginal probs
