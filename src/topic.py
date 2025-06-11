@@ -1,5 +1,7 @@
 """ SETUP """
 # LIBRARIES
+from collections import defaultdict
+import copy
 from pathlib import Path
 from scipy.sparse import csr_matrix, find, lil_matrix
 from sklearn.metrics.pairwise import cosine_similarity
@@ -12,6 +14,9 @@ import scipy.sparse as sps
 import seaborn as sns
 import sys
 import umap
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning, message="'force_all_finite' was renamed")
+warnings.filterwarnings("ignore", category=UserWarning, message="n_neighbors is larger than the dataset size")
 
 
 # DIRECTORIES
@@ -55,6 +60,35 @@ def get_representative_topics(n_repr, bert_model, df, docs_col, topics_col, rank
         representative_docs_idx[topic] = top_n
     
     return representative_docs_idx
+
+
+def get_louvain_community_reps(g_dd, topics, top_k=10):
+    # Ensure edge weights are numeric
+    if "weight" in g_dd.es.attribute_names():
+        g_dd.es["weight"] = list(map(float, g_dd.es["weight"]))
+
+    # Build vertex-topic lookup
+    vertex_topic = np.array(topics)
+
+    # Compute top-K representatives
+    community_reps = defaultdict(list)
+    unique_topics = np.unique(vertex_topic)
+
+    for t_id in unique_topics:
+        v_idx = np.where(vertex_topic == t_id)[0].tolist()
+        if not v_idx:
+            continue
+
+        sub = g_dd.subgraph(v_idx)
+        strengths = sub.strength(weights=sub.es["weight"]) if sub.ecount() else [0] * sub.vcount()
+
+        top_local = np.argsort(strengths)[::-1][:min(top_k, len(strengths))]
+        top_global = [v_idx[i] for i in top_local]
+        top_docids = [g_dd.vs[g_idx]["name"] for g_idx in top_global]
+
+        community_reps[t_id] = top_docids
+
+    return community_reps
 
 
 def top_docs_per_topic(n_repr, df, og_text_col, topic_col, rank_col):
@@ -177,3 +211,64 @@ def plot_topic_network(bert_model, topic_labels_dict, vertex_size=0.6, vertex_la
             edge_curved=0.3)
 
     ax.set_title(title, fontsize=14)
+
+
+def plot_topic_network_louvain(Pcc, pc, title="Topic Graph"):
+    # UMAP layout
+    t_pos = umap.UMAP().fit_transform(Pcc.toarray())
+    t_pos -= t_pos.mean(axis=0)
+
+    # Metadata
+    topic_centrality = np.array(pc)[0]
+    topic_names = [f"topic {i}" for i in range(pc.shape[1])]
+    topic_colors = sns.color_palette("colorblind", n_colors=len(topic_names))
+
+    # Build graph
+    A = Pcc.toarray()
+    np.fill_diagonal(A, 0)
+    G = ig.Graph.Adjacency((A > 0).tolist())
+
+    # Use lower triangle of A for edge weights (assumes symmetric matrix)
+    At = np.tril(A, k=0)
+    G.es["weight"] = np.array(At[A.nonzero()])
+
+    # Plot graph
+    fig, ax = plt.subplots(dpi=400, figsize=(10, 10))
+    ig.plot(
+        G,
+        target=ax,
+        layout=t_pos,
+        vertex_size=1500 * topic_centrality,
+        vertex_color=topic_colors,
+        vertex_label=topic_names,
+        vertex_label_size=9,
+        vertex_label_dist=0,
+        vertex_frame_width=0,
+        edge_width=100 * np.array(G.es["weight"]),
+        edge_color="grey",
+        edge_arrow_size=0.0
+    )
+    ax.set_title(title, fontsize=14)
+
+
+def to_bertopic_style(bert_model_in, documents, topics, fine_tuned_labels=None):
+    bert_model = copy.deepcopy(bert_model_in)
+
+    documents = pd.DataFrame(documents, columns=['Document'])
+    documents['Topic'] = topics
+
+    bert_model.topics_ = documents['Topic'].tolist()
+
+    documents_per_topic = documents.groupby(['Topic'], as_index=False).agg({'Document': ' '.join})
+    c_tf_idf_, words = bert_model._c_tf_idf(documents_per_topic)
+    bert_model.c_tf_idf_ = c_tf_idf_
+
+    topic_representations_ = bert_model._extract_words_per_topic(words, documents)
+    bert_model.topic_representations_ = topic_representations_
+    if fine_tuned_labels is not None:
+        bert_model.set_topic_labels(fine_tuned_labels)
+    else:
+        bert_model.set_topic_labels([f"{key}_" + "_".join([word[0] for word in values[:4]])]
+                                for key, values in bert_model.topic_representations_.items())
+    
+    return bert_model
