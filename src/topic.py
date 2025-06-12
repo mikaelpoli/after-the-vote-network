@@ -213,14 +213,17 @@ def plot_topic_network(bert_model, topic_labels_dict, vertex_size=0.6, vertex_la
     ax.set_title(title, fontsize=14)
 
 
-def plot_topic_network_louvain(Pcc, pc, title="Topic Graph"):
+def plot_topic_network_louvain(Pcc, pc, topic_labels=None, vertex_lab_size=5, title="Topic Graph"):
     # UMAP layout
     t_pos = umap.UMAP().fit_transform(Pcc.toarray())
     t_pos -= t_pos.mean(axis=0)
 
     # Metadata
     topic_centrality = np.array(pc)[0]
-    topic_names = [f"topic {i}" for i in range(pc.shape[1])]
+    if topic_labels is not None:
+        topic_names = [topic_labels[i] for i in topic_labels]
+    else:
+        topic_names = [f"topic {i}" for i in range(pc.shape[1])]
     topic_colors = sns.color_palette("colorblind", n_colors=len(topic_names))
 
     # Build graph
@@ -241,12 +244,12 @@ def plot_topic_network_louvain(Pcc, pc, title="Topic Graph"):
         vertex_size=1500 * topic_centrality,
         vertex_color=topic_colors,
         vertex_label=topic_names,
-        vertex_label_size=9,
+        vertex_label_size=vertex_lab_size,
         vertex_label_dist=0,
         vertex_frame_width=0,
         edge_width=100 * np.array(G.es["weight"]),
         edge_color="grey",
-        edge_arrow_size=0.0
+        edge_arrow_size=1e-5
     )
     ax.set_title(title, fontsize=14)
 
