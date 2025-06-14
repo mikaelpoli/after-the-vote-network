@@ -6,5 +6,7 @@ venv/*
 src/data
 results/graphs/g_wd.graphml
 results/graphs/g_ww.graphml
+results/graphs/sentiment_graph.graphml
 results/plots/*
 .env
+results/models/liwc-22/liwc-22-manual.pdf
