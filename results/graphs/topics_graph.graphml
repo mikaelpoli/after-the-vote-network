@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+         http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+<!-- Created by igraph -->
+  <key id="v_leiden_topic" for="node" attr.name="leiden_topic" attr.type="double"/>
+  <key id="v_politic" for="node" attr.name="politic" attr.type="double"/>
+  <key id="v_mental" for="node" attr.name="mental" attr.type="double"/>
+  <key id="v_health" for="node" attr.name="health" attr.type="double"/>
+  <key id="v_emotion" for="node" attr.name="emotion" attr.type="double"/>
+  <key id="v_tone" for="node" attr.name="tone" attr.type="double"/>
+  <key id="v_agency" for="node" attr.name="agency" attr.type="double"/>
+  <key id="v_node_strength" for="node" attr.name="node_strength" attr.type="double"/>
+  <key id="v_topic_label" for="node" attr.name="topic_label" attr.type="string"/>
+  <key id="e_weight" for="edge" attr.name="weight" attr.type="double"/>
+  <graph id="G" edgedefault="undirected">
+    <node id="n0">
+      <data key="v_leiden_topic">0</data>
+      <data key="v_politic">2.72729611650485</data>
+      <data key="v_mental">0.0524781553398058</data>
+      <data key="v_health">0.465373786407767</data>
+      <data key="v_emotion">-0.280325242718447</data>
+      <data key="v_tone">-0.194597087378641</data>
+      <data key="v_agency">0.0382685196543393</data>
+      <data key="v_node_strength">0.243282632946171</data>
+      <data key="v_topic_label">Erosion of Trans Rights in the U.S.</data>
+    </node>
+    <node id="n1">
+      <data key="v_leiden_topic">1</data>
+      <data key="v_politic">0.170532247964934</data>
+      <data key="v_mental">0.0884439574201628</data>
+      <data key="v_health">0.420034439574202</data>
+      <data key="v_emotion">0.154768315591734</data>
+      <data key="v_tone">1.38865059486537</data>
+      <data key="v_agency">0.0387391773704439</data>
+      <data key="v_node_strength">0.360474069011157</data>
+      <data key="v_topic_label">Daily Challenges for Trans People</data>
+    </node>
+    <node id="n2">
+      <data key="v_leiden_topic">2</data>
+      <data key="v_politic">0.242294317217981</data>
+      <data key="v_mental">0.339215436810857</data>
+      <data key="v_health">2.13106870229008</data>
+      <data key="v_emotion">0.0147921967769296</data>
+      <data key="v_tone">0.777430025445293</data>
+      <data key="v_agency">0.0379883116057834</data>
+      <data key="v_node_strength">0.136405792839674</data>
+      <data key="v_topic_label">Comprehensive Care for Trans Youth</data>
+    </node>
+    <node id="n3">
+      <data key="v_leiden_topic">3</data>
+      <data key="v_politic">0.496492478226445</data>
+      <data key="v_mental">0.0967300079176564</data>
+      <data key="v_health">0.521773555027712</data>
+      <data key="v_emotion">-0.843032462391132</data>
+      <data key="v_tone">-0.446096595407759</data>
+      <data key="v_agency">0.0384567682253611</data>
+      <data key="v_node_strength">0.0647144786129312</data>
+      <data key="v_topic_label">Christianity and Trans Identity Conflict</data>
+    </node>
+    <node id="n4">
+      <data key="v_leiden_topic">4</data>
+      <data key="v_politic">0.270140086206897</data>
+      <data key="v_mental">0.052176724137931</data>
+      <data key="v_health">0.415193965517241</data>
+      <data key="v_emotion">0.191530172413793</data>
+      <data key="v_tone">1.17234913793103</data>
+      <data key="v_agency">0.0382311376789585</data>
+      <data key="v_node_strength">0.0356850652867753</data>
+      <data key="v_topic_label">HRT Physiological and Anatomical Changes</data>
+    </node>
+    <node id="n5">
+      <data key="v_leiden_topic">5</data>
+      <data key="v_politic">0.353511904761905</data>
+      <data key="v_mental">0.0507738095238095</data>
+      <data key="v_health">0.1845</data>
+      <data key="v_emotion">-0.246761904761905</data>
+      <data key="v_tone">0.436488095238095</data>
+      <data key="v_agency">0.0401001795135597</data>
+      <data key="v_node_strength">0.0499710678651827</data>
+      <data key="v_topic_label">Cultural Sensitivity in Name Choice</data>
+    </node>
+    <node id="n6">
+      <data key="v_leiden_topic">6</data>
+      <data key="v_politic">0.372640306122449</data>
+      <data key="v_mental">0.180484693877551</data>
+      <data key="v_health">0.675905612244898</data>
+      <data key="v_emotion">-0.257244897959184</data>
+      <data key="v_tone">0.5875</data>
+      <data key="v_agency">0.0384540477815759</data>
+      <data key="v_node_strength">0.027346158827597</data>
+      <data key="v_topic_label">Hypersexualization of Trans People</data>
+    </node>
+    <node id="n7">
+      <data key="v_leiden_topic">7</data>
+      <data key="v_politic">0.212573964497041</data>
+      <data key="v_mental">0.104289940828402</data>
+      <data key="v_health">0.685739644970414</data>
+      <data key="v_emotion">0.49310650887574</data>
+      <data key="v_tone">1.97755917159763</data>
+      <data key="v_agency">0.0389380623734596</data>
+      <data key="v_node_strength">0.0229178980696373</data>
+      <data key="v_topic_label">Legal Document Changes</data>
+    </node>
+    <node id="n8">
+      <data key="v_leiden_topic">8</data>
+      <data key="v_politic">0.31650406504065</data>
+      <data key="v_mental">0.0952357723577236</data>
+      <data key="v_health">0.363073170731707</data>
+      <data key="v_emotion">-0.162162601626016</data>
+      <data key="v_tone">1.75682926829268</data>
+      <data key="v_agency">0.0389017888145255</data>
+      <data key="v_node_strength">0.0230340823336322</data>
+      <data key="v_topic_label">LGBTQ+ Representation and Controversies in Media</data>
+    </node>
+    <node id="n9">
+      <data key="v_leiden_topic">9</data>
+      <data key="v_politic">0.243079365079365</data>
+      <data key="v_mental">0.0434920634920635</data>
+      <data key="v_health">0.236539682539683</data>
+      <data key="v_emotion">1.68352380952381</data>
+      <data key="v_tone">4.76098412698413</data>
+      <data key="v_agency">0.0393151368222953</data>
+      <data key="v_node_strength">0.00914099609167046</data>
+      <data key="v_topic_label">Gender-Neutrality of Language</data>
+    </node>
+    <node id="n10">
+      <data key="v_leiden_topic">10</data>
+      <data key="v_politic">0.295757575757576</data>
+      <data key="v_mental">0.0151515151515152</data>
+      <data key="v_health">0.465606060606061</data>
+      <data key="v_emotion">0.867045454545455</data>
+      <data key="v_tone">6.12034090909091</data>
+      <data key="v_agency">0.0379851766070351</data>
+      <data key="v_node_strength">0.00973905696258333</data>
+      <data key="v_topic_label">Trans Resources and Legal Context</data>
+    </node>
+    <node id="n11">
+      <data key="v_leiden_topic">11</data>
+      <data key="v_politic">0.20704347826087</data>
+      <data key="v_mental">0.0489565217391304</data>
+      <data key="v_health">0.355782608695652</data>
+      <data key="v_emotion">-0.225695652173913</data>
+      <data key="v_tone">-0.0569565217391304</data>
+      <data key="v_agency">0.0389571006642655</data>
+      <data key="v_node_strength">0.0114091961677329</data>
+      <data key="v_topic_label">Sex and Gender in Nature vs. Norms</data>
+    </node>
+    <node id="n12">
+      <data key="v_leiden_topic">12</data>
+      <data key="v_politic">0.487064676616915</data>
+      <data key="v_mental">0.0599004975124378</data>
+      <data key="v_health">0.325373134328358</data>
+      <data key="v_emotion">1.52980099502488</data>
+      <data key="v_tone">3.15930348258706</data>
+      <data key="v_agency">0.0379831446457262</data>
+      <data key="v_node_strength">0.00537449461371578</data>
+      <data key="v_topic_label">Misrepresentation of School Shooter Narratives</data>
+    </node>
+    <node id="n13">
+      <data key="v_leiden_topic">13</data>
+      <data key="v_politic">0</data>
+      <data key="v_mental">0</data>
+      <data key="v_health">0</data>
+      <data key="v_emotion">0</data>
+      <data key="v_tone">0</data>
+      <data key="v_agency">0</data>
+      <data key="v_node_strength">0</data>
+      <data key="v_topic_label">Outliers 1</data>
+    </node>
+    <node id="n14">
+      <data key="v_leiden_topic">14</data>
+      <data key="v_politic">0</data>
+      <data key="v_mental">0</data>
+      <data key="v_health">0</data>
+      <data key="v_emotion">0</data>
+      <data key="v_tone">0</data>
+      <data key="v_agency">0</data>
+      <data key="v_node_strength">0</data>
+      <data key="v_topic_label">Outliers 2</data>
+    </node>
+    <node id="n15">
+      <data key="v_leiden_topic">15</data>
+      <data key="v_politic">0</data>
+      <data key="v_mental">0</data>
+      <data key="v_health">0</data>
+      <data key="v_emotion">0</data>
+      <data key="v_tone">0</data>
+      <data key="v_agency">0</data>
+      <data key="v_node_strength">0</data>
+      <data key="v_topic_label">Outliers 3</data>
+    </node>
+    <edge source="n0" target="n1">
+      <data key="e_weight">0.0473538772137145</data>
+    </edge>
+    <edge source="n0" target="n2">
+      <data key="e_weight">0.0209570554735448</data>
+    </edge>
+    <edge source="n0" target="n3">
+      <data key="e_weight">0.0120245551578018</data>
+    </edge>
+    <edge source="n0" target="n4">
+      <data key="e_weight">0.00465098458966964</data>
+    </edge>
+    <edge source="n0" target="n5">
+      <data key="e_weight">0.00707310223401641</data>
+    </edge>
+    <edge source="n0" target="n6">
+      <data key="e_weight">0.00394097638650843</data>
+    </edge>
+    <edge source="n0" target="n7">
+      <data key="e_weight">0.00420824591356692</data>
+    </edge>
+    <edge source="n0" target="n8">
+      <data key="e_weight">0.00385628901683814</data>
+    </edge>
+    <edge source="n0" target="n9">
+      <data key="e_weight">0.0010256255986007</data>
+    </edge>
+    <edge source="n0" target="n10">
+      <data key="e_weight">0.0016180093556226</data>
+    </edge>
+    <edge source="n0" target="n11">
+      <data key="e_weight">0.00133092060225182</data>
+    </edge>
+    <edge source="n0" target="n12">
+      <data key="e_weight">0.0010110004061714</data>
+    </edge>
+    <edge source="n0" target="n13">
+      <data key="e_weight">2.47694099078438e-05</data>
+    </edge>
+    <edge source="n0" target="n14">
+      <data key="e_weight">1.41779288799343e-06</data>
+    </edge>
+    <edge source="n0" target="n15">
+      <data key="e_weight">9.94448487926654e-06</data>
+    </edge>
+    <edge source="n1" target="n2">
+      <data key="e_weight">0.0369701294572041</data>
+    </edge>
+    <edge source="n1" target="n3">
+      <data key="e_weight">0.0172477730428051</data>
+    </edge>
+    <edge source="n1" target="n4">
+      <data key="e_weight">0.00889597527641473</data>
+    </edge>
+    <edge source="n1" target="n5">
+      <data key="e_weight">0.0143011253780657</data>
+    </edge>
+    <edge source="n1" target="n6">
+      <data key="e_weight">0.0069983267144725</data>
+    </edge>
+    <edge source="n1" target="n7">
+      <data key="e_weight">0.00534638742406825</data>
+    </edge>
+    <edge source="n1" target="n8">
+      <data key="e_weight">0.00532342963680793</data>
+    </edge>
+    <edge source="n1" target="n9">
+      <data key="e_weight">0.0022608452591786</data>
+    </edge>
+    <edge source="n1" target="n10">
+      <data key="e_weight">0.00225083793793691</data>
+    </edge>
+    <edge source="n1" target="n11">
+      <data key="e_weight">0.00297874772619666</data>
+    </edge>
+    <edge source="n1" target="n12">
+      <data key="e_weight">0.00102048978491738</data>
+    </edge>
+    <edge source="n1" target="n13">
+      <data key="e_weight">6.89214294078532e-05</data>
+    </edge>
+    <edge source="n1" target="n14">
+      <data key="e_weight">6.17554936912218e-06</data>
+    </edge>
+    <edge source="n1" target="n15">
+      <data key="e_weight">1.86965470631314e-05</data>
+    </edge>
+    <edge source="n2" target="n3">
+      <data key="e_weight">0.00552016734473582</data>
+    </edge>
+    <edge source="n2" target="n4">
+      <data key="e_weight">0.00348383394417854</data>
+    </edge>
+    <edge source="n2" target="n5">
+      <data key="e_weight">0.0036338247267871</data>
+    </edge>
+    <edge source="n2" target="n6">
+      <data key="e_weight">0.00218159098182471</data>
+    </edge>
+    <edge source="n2" target="n7">
+      <data key="e_weight">0.00214904539699547</data>
+    </edge>
+    <edge source="n2" target="n8">
+      <data key="e_weight">0.00187725491388437</data>
+    </edge>
+    <edge source="n2" target="n9">
+      <data key="e_weight">0.000700478561757243</data>
+    </edge>
+    <edge source="n2" target="n10">
+      <data key="e_weight">0.000914509236063371</data>
+    </edge>
+    <edge source="n2" target="n11">
+      <data key="e_weight">0.00125792682479101</data>
+    </edge>
+    <edge source="n2" target="n12">
+      <data key="e_weight">0.000437491441116179</data>
+    </edge>
+    <edge source="n2" target="n13">
+      <data key="e_weight">2.42349668591318e-05</data>
+    </edge>
+    <edge source="n2" target="n14">
+      <data key="e_weight">5.75259122586625e-07</data>
+    </edge>
+    <edge source="n2" target="n15">
+      <data key="e_weight">2.59684893096558e-06</data>
+    </edge>
+    <edge source="n3" target="n4">
+      <data key="e_weight">0.00133786137927037</data>
+    </edge>
+    <edge source="n3" target="n5">
+      <data key="e_weight">0.00245419218703849</data>
+    </edge>
+    <edge source="n3" target="n6">
+      <data key="e_weight">0.00127495667344294</data>
+    </edge>
+    <edge source="n3" target="n7">
+      <data key="e_weight">0.000887174548408061</data>
+    </edge>
+    <edge source="n3" target="n8">
+      <data key="e_weight">0.0011146178631474</data>
+    </edge>
+    <edge source="n3" target="n9">
+      <data key="e_weight">0.000369710054806548</data>
+    </edge>
+    <edge source="n3" target="n10">
+      <data key="e_weight">0.000425632744077199</data>
+    </edge>
+    <edge source="n3" target="n11">
+      <data key="e_weight">0.000653225530529633</data>
+    </edge>
+    <edge source="n3" target="n12">
+      <data key="e_weight">0.000282646489628797</data>
+    </edge>
+    <edge source="n3" target="n13">
+      <data key="e_weight">2.85266526813817e-06</data>
+    </edge>
+    <edge source="n4" target="n5">
+      <data key="e_weight">0.00097333544678986</data>
+    </edge>
+    <edge source="n4" target="n6">
+      <data key="e_weight">0.000696138741586986</data>
+    </edge>
+    <edge source="n4" target="n7">
+      <data key="e_weight">0.000657751077794004</data>
+    </edge>
+    <edge source="n4" target="n8">
+      <data key="e_weight">0.000603171006091993</data>
+    </edge>
+    <edge source="n4" target="n9">
+      <data key="e_weight">0.000278493020760621</data>
+    </edge>
+    <edge source="n4" target="n10">
+      <data key="e_weight">0.000184780819563177</data>
+    </edge>
+    <edge source="n4" target="n11">
+      <data key="e_weight">0.000308860330318622</data>
+    </edge>
+    <edge source="n4" target="n12">
+      <data key="e_weight">0.00015688413429687</data>
+    </edge>
+    <edge source="n4" target="n13">
+      <data key="e_weight">2.07660353051284e-06</data>
+    </edge>
+    <edge source="n5" target="n6">
+      <data key="e_weight">0.000954255479644214</data>
+    </edge>
+    <edge source="n5" target="n7">
+      <data key="e_weight">0.000714586505519881</data>
+    </edge>
+    <edge source="n5" target="n8">
+      <data key="e_weight">0.000793726504140592</data>
+    </edge>
+    <edge source="n5" target="n9">
+      <data key="e_weight">0.000310624664086373</data>
+    </edge>
+    <edge source="n5" target="n10">
+      <data key="e_weight">0.000278607441689499</data>
+    </edge>
+    <edge source="n5" target="n11">
+      <data key="e_weight">0.000337575638995106</data>
+    </edge>
+    <edge source="n5" target="n12">
+      <data key="e_weight">0.000164348942301705</data>
+    </edge>
+    <edge source="n5" target="n13">
+      <data key="e_weight">8.30785145774594e-07</data>
+    </edge>
+    <edge source="n5" target="n14">
+      <data key="e_weight">1.72985552220187e-06</data>
+    </edge>
+    <edge source="n5" target="n15">
+      <data key="e_weight">1.35123368950673e-06</data>
+    </edge>
+    <edge source="n6" target="n7">
+      <data key="e_weight">0.00042113868742919</data>
+    </edge>
+    <edge source="n6" target="n8">
+      <data key="e_weight">0.000507536391319935</data>
+    </edge>
+    <edge source="n6" target="n9">
+      <data key="e_weight">0.000186875489637544</data>
+    </edge>
+    <edge source="n6" target="n10">
+      <data key="e_weight">0.000181107517599351</data>
+    </edge>
+    <edge source="n6" target="n11">
+      <data key="e_weight">0.000194022736111582</data>
+    </edge>
+    <edge source="n6" target="n12">
+      <data key="e_weight">0.000113595236570087</data>
+    </edge>
+    <edge source="n6" target="n13">
+      <data key="e_weight">3.59759578529388e-06</data>
+    </edge>
+    <edge source="n6" target="n15">
+      <data key="e_weight">3.63001739117405e-07</data>
+    </edge>
+    <edge source="n7" target="n8">
+      <data key="e_weight">0.00035640421646703</data>
+    </edge>
+    <edge source="n7" target="n9">
+      <data key="e_weight">0.000114476468502565</data>
+    </edge>
+    <edge source="n7" target="n10">
+      <data key="e_weight">0.000157709986648376</data>
+    </edge>
+    <edge source="n7" target="n11">
+      <data key="e_weight">0.00014152239450869</data>
+    </edge>
+    <edge source="n7" target="n12">
+      <data key="e_weight">8.41538490292486e-05</data>
+    </edge>
+    <edge source="n7" target="n13">
+      <data key="e_weight">2.08103453068142e-06</data>
+    </edge>
+    <edge source="n7" target="n15">
+      <data key="e_weight">2.69095357175862e-07</data>
+    </edge>
+    <edge source="n8" target="n9">
+      <data key="e_weight">0.000139326967668989</data>
+    </edge>
+    <edge source="n8" target="n10">
+      <data key="e_weight">0.000136654063778358</data>
+    </edge>
+    <edge source="n8" target="n11">
+      <data key="e_weight">0.000172640756667724</data>
+    </edge>
+    <edge source="n8" target="n12">
+      <data key="e_weight">0.000102545454500274</data>
+    </edge>
+    <edge source="n8" target="n13">
+      <data key="e_weight">3.95932842808442e-06</data>
+    </edge>
+    <edge source="n9" target="n10">
+      <data key="e_weight">4.80026090832436e-05</data>
+    </edge>
+    <edge source="n9" target="n11">
+      <data key="e_weight">8.96814330163784e-05</data>
+    </edge>
+    <edge source="n9" target="n12">
+      <data key="e_weight">1.72563261582401e-05</data>
+    </edge>
+    <edge source="n10" target="n11">
+      <data key="e_weight">6.35457371401318e-05</data>
+    </edge>
+    <edge source="n10" target="n12">
+      <data key="e_weight">2.72538240127562e-05</data>
+    </edge>
+    <edge source="n10" target="n13">
+      <data key="e_weight">2.86236500510443e-07</data>
+    </edge>
+    <edge source="n10" target="n15">
+      <data key="e_weight">3.93422970517687e-07</data>
+    </edge>
+    <edge source="n11" target="n12">
+      <data key="e_weight">4.12016441043981e-05</data>
+    </edge>
+    <edge source="n11" target="n13">
+      <data key="e_weight">4.24745943047444e-07</data>
+    </edge>
+    <edge source="n12" target="n13">
+      <data key="e_weight">3.01013821361414e-07</data>
+    </edge>
+  </graph>
+</graphml>
