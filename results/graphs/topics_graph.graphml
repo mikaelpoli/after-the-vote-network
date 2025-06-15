@@ -13,6 +13,8 @@
   <key id="v_agency" for="node" attr.name="agency" attr.type="double"/>
   <key id="v_node_strength" for="node" attr.name="node_strength" attr.type="double"/>
   <key id="v_topic_label" for="node" attr.name="topic_label" attr.type="string"/>
+  <key id="v_pagerank_unweighted" for="node" attr.name="pagerank_unweighted" attr.type="double"/>
+  <key id="v_pagerank_weighted" for="node" attr.name="pagerank_weighted" attr.type="double"/>
   <key id="e_weight" for="edge" attr.name="weight" attr.type="double"/>
   <graph id="G" edgedefault="undirected">
     <node id="n0">
@@ -25,6 +27,8 @@
       <data key="v_agency">0.0382685196543393</data>
       <data key="v_node_strength">0.243282632946171</data>
       <data key="v_topic_label">Erosion of Trans Rights in the U.S.</data>
+      <data key="v_pagerank_unweighted">0.0736981911494598</data>
+      <data key="v_pagerank_weighted">0.195220756210606</data>
     </node>
     <node id="n1">
       <data key="v_leiden_topic">1</data>
@@ -36,6 +40,8 @@
       <data key="v_agency">0.0387391773704439</data>
       <data key="v_node_strength">0.360474069011157</data>
       <data key="v_topic_label">Daily Challenges for Trans People</data>
+      <data key="v_pagerank_unweighted">0.0736981911494598</data>
+      <data key="v_pagerank_weighted">0.291655733035533</data>
     </node>
     <node id="n2">
       <data key="v_leiden_topic">2</data>
@@ -47,6 +53,8 @@
       <data key="v_agency">0.0379883116057834</data>
       <data key="v_node_strength">0.136405792839674</data>
       <data key="v_topic_label">Comprehensive Care for Trans Youth</data>
+      <data key="v_pagerank_unweighted">0.0736981911494598</data>
+      <data key="v_pagerank_weighted">0.115183746221067</data>
     </node>
     <node id="n3">
       <data key="v_leiden_topic">3</data>
@@ -58,6 +66,8 @@
       <data key="v_agency">0.0384567682253611</data>
       <data key="v_node_strength">0.0647144786129312</data>
       <data key="v_topic_label">Christianity and Trans Identity Conflict</data>
+      <data key="v_pagerank_unweighted">0.0635051684834419</data>
+      <data key="v_pagerank_weighted">0.0605479008719216</data>
     </node>
     <node id="n4">
       <data key="v_leiden_topic">4</data>
@@ -69,6 +79,8 @@
       <data key="v_agency">0.0382311376789585</data>
       <data key="v_node_strength">0.0356850652867753</data>
       <data key="v_topic_label">HRT Physiological and Anatomical Changes</data>
+      <data key="v_pagerank_unweighted">0.0635051684834419</data>
+      <data key="v_pagerank_weighted">0.039842923178914</data>
     </node>
     <node id="n5">
       <data key="v_leiden_topic">5</data>
@@ -80,6 +92,8 @@
       <data key="v_agency">0.0401001795135597</data>
       <data key="v_node_strength">0.0499710678651827</data>
       <data key="v_topic_label">Cultural Sensitivity in Name Choice</data>
+      <data key="v_pagerank_unweighted">0.0736981911494598</data>
+      <data key="v_pagerank_weighted">0.0509192662170061</data>
     </node>
     <node id="n6">
       <data key="v_leiden_topic">6</data>
@@ -91,6 +105,8 @@
       <data key="v_agency">0.0384540477815759</data>
       <data key="v_node_strength">0.027346158827597</data>
       <data key="v_topic_label">Hypersexualization of Trans People</data>
+      <data key="v_pagerank_unweighted">0.0681922368098697</data>
+      <data key="v_pagerank_weighted">0.033652520484303</data>
     </node>
     <node id="n7">
       <data key="v_leiden_topic">7</data>
@@ -102,6 +118,8 @@
       <data key="v_agency">0.0389380623734596</data>
       <data key="v_node_strength">0.0229178980696373</data>
       <data key="v_topic_label">Legal Document Changes</data>
+      <data key="v_pagerank_unweighted">0.0681922368098697</data>
+      <data key="v_pagerank_weighted">0.0298555818248565</data>
     </node>
     <node id="n8">
       <data key="v_leiden_topic">8</data>
@@ -113,6 +131,8 @@
       <data key="v_agency">0.0389017888145255</data>
       <data key="v_node_strength">0.0230340823336322</data>
       <data key="v_topic_label">LGBTQ+ Representation and Controversies in Media</data>
+      <data key="v_pagerank_unweighted">0.0635051684834419</data>
+      <data key="v_pagerank_weighted">0.0303418239298755</data>
     </node>
     <node id="n9">
       <data key="v_leiden_topic">9</data>
@@ -124,6 +144,8 @@
       <data key="v_agency">0.0393151368222953</data>
       <data key="v_node_strength">0.00914099609167046</data>
       <data key="v_topic_label">Gender-Neutrality of Language</data>
+      <data key="v_pagerank_unweighted">0.0592619936947548</data>
+      <data key="v_pagerank_weighted">0.0206073839339529</data>
     </node>
     <node id="n10">
       <data key="v_leiden_topic">10</data>
@@ -135,6 +157,8 @@
       <data key="v_agency">0.0379851766070351</data>
       <data key="v_node_strength">0.00973905696258333</data>
       <data key="v_topic_label">Trans Resources and Legal Context</data>
+      <data key="v_pagerank_unweighted">0.0681922368098697</data>
+      <data key="v_pagerank_weighted">0.020484467613176</data>
     </node>
     <node id="n11">
       <data key="v_leiden_topic">11</data>
@@ -146,6 +170,8 @@
       <data key="v_agency">0.0389571006642655</data>
       <data key="v_node_strength">0.0114091961677329</data>
       <data key="v_topic_label">Sex and Gender in Nature vs. Norms</data>
+      <data key="v_pagerank_unweighted">0.0635051684834419</data>
+      <data key="v_pagerank_weighted">0.0214361194479601</data>
     </node>
     <node id="n12">
       <data key="v_leiden_topic">12</data>
@@ -157,6 +183,8 @@
       <data key="v_agency">0.0379831446457262</data>
       <data key="v_node_strength">0.00537449461371578</data>
       <data key="v_topic_label">Misrepresentation of School Shooter Narratives</data>
+      <data key="v_pagerank_unweighted">0.0635051684834419</data>
+      <data key="v_pagerank_weighted">0.0173330695941546</data>
     </node>
     <node id="n13">
       <data key="v_leiden_topic">13</data>
@@ -168,6 +196,8 @@
       <data key="v_agency">0</data>
       <data key="v_node_strength">0</data>
       <data key="v_topic_label">Outliers 1</data>
+      <data key="v_pagerank_unweighted">0</data>
+      <data key="v_pagerank_weighted">0</data>
     </node>
     <node id="n14">
       <data key="v_leiden_topic">14</data>
@@ -179,6 +209,8 @@
       <data key="v_agency">0</data>
       <data key="v_node_strength">0</data>
       <data key="v_topic_label">Outliers 2</data>
+      <data key="v_pagerank_unweighted">0</data>
+      <data key="v_pagerank_weighted">0</data>
     </node>
     <node id="n15">
       <data key="v_leiden_topic">15</data>
@@ -190,6 +222,8 @@
       <data key="v_agency">0</data>
       <data key="v_node_strength">0</data>
       <data key="v_topic_label">Outliers 3</data>
+      <data key="v_pagerank_unweighted">0</data>
+      <data key="v_pagerank_weighted">0</data>
     </node>
     <edge source="n0" target="n1">
       <data key="e_weight">0.0473538772137145</data>
