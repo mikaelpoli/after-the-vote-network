@@ -9,5 +9,8 @@ results/graphs/g_ww.graphml
 results/graphs/sentiment_graph.graphml
 results/plots/comments
 results/plots/posts
+results/plots/ncp/ncp.png
+results/plots/ncp/ncp-docs-99.png
+results/plots/ncp/ncp-word.png
 .env
 results/models/liwc-22/liwc-22-manual.pdf
