@@ -6,8 +6,8 @@ Transgender people face stigma and discrimination, leading to minority stress: a
 The aim of the project is to capture a snapshot of online discourse within trans-oriented communities in the months following Trump’s re-election by performing topic detection and sentiment analysis on top posts and comments from Reddit r/trans, r/transgender, and r/asktransgender. Posts span from December 6, 2025, to May 17, 2025.
 
 For a full description of the workflow and results:
-- [Report](https://github.com/mikaelpoli/ns-reddit-app/blob/main/report.pdf)
-- [PPT (.pdf)](https://github.com/mikaelpoli/ns-reddit-app/blob/main/presentation.pdf)
+- [Report](https://github.com/mikaelpoli/after-the-vote-network/blob/main/report.pdf)
+- [PPT (.pdf)](https://github.com/mikaelpoli/after-the-vote-network/blob/main/presentation.pdf)
 
 ## Essential Project Repo Structure
 [root.]
