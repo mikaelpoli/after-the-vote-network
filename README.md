@@ -1,5 +1,5 @@
 # After the Vote: Mapping Online Trans Discourse
-This project was created for the Network Science exam at Unipd.
+This project was created for the Network Science class at Unipd.
 
 ## Overview
 Transgender people face stigma and discrimination, leading to minority stress: a chronic strain linked to negative mental and physical health outcomes ([Hunter et al., 2021](https://doi.org/10.1177/13591045211033187)). It is realistic to think this stress can be intensified by political attacks on trans rights, especially efforts to restrict access to gender-affirming care and fuel the demonization of trans people. Donald Trump’s 2024 Agenda 47 campaign included several such proposals ([President Trump’s Plan to Protect Children From Left-Wing Gender Insanity | Donald J. Trump for President 2024](https://www.donaldjtrump.com/agenda47/president-trumps-plan-to-protect-children-from-left-wing-gender-insanity)).
