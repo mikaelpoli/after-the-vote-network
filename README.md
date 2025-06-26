@@ -3,7 +3,7 @@ This project was created for the Network Science class at Unipd.
 
 ## Overview
 Transgender people face stigma and discrimination, leading to minority stress: a chronic strain linked to negative mental and physical health outcomes ([Hunter et al., 2021](https://doi.org/10.1177/13591045211033187)). It is realistic to think this stress can be intensified by political attacks on trans rights, especially efforts to restrict access to gender-affirming care and fuel the demonization of trans people. Donald Trump’s 2024 Agenda 47 campaign included several such proposals ([President Trump’s Plan to Protect Children From Left-Wing Gender Insanity | Donald J. Trump for President 2024](https://www.donaldjtrump.com/agenda47/president-trumps-plan-to-protect-children-from-left-wing-gender-insanity)).
-The aim of the project is to capture a snapshot of online discourse within trans-oriented communities in the months following Trump’s re-election by performing topic detection and sentiment analysis on top posts and comments from Reddit r/trans, r/transgender, and r/asktransgender. Posts span from December 6, 2025, to May 17, 2025.
+The aim of the project is to capture a snapshot of online discourse within trans-oriented communities in the months following Trump’s re-election by performing topic detection and sentiment analysis on top posts and comments from Reddit r/trans, r/transgender, and r/asktransgender. Posts span from December 6, 2024, to May 17, 2025.
 
 For a full description of the workflow and results:
 - [Report](https://github.com/mikaelpoli/after-the-vote-network/blob/main/report.pdf)
