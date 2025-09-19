@@ -50,7 +50,7 @@ Use **Python 3.11** for compatibility with spaCy (must install spaCy's English l
 
 All intermediate results were saved in the `data/` and `results/` directories and loaded in each file and notebook in the pipeline.
 
-Main files:
+### Main files
 - **Documents**: in the `data/` directory.
 	- `docs_dd_giant.json` contains the original and POS-tagged documents in the final document-level network.
 	- `df_dd.json` contains the original documents as well as their classification into topics by all four methods (BERTopic, BERTopic-reduced, Louvain, Leiden).
