@@ -1,5 +1,4 @@
 # After the Vote: Mapping Online Trans Discourse
-This project was created for the Network Science class at Unipd.
 
 ## Overview
 Transgender people face stigma and discrimination, leading to minority stress: a chronic strain linked to negative mental and physical health outcomes ([Hunter et al., 2021](https://doi.org/10.1177/13591045211033187)). It is realistic to think this stress can be intensified by political attacks on trans rights, especially efforts to restrict access to gender-affirming care and fuel the demonization of trans people. Donald Trump’s 2024 Agenda 47 campaign included several such proposals ([President Trump’s Plan to Protect Children From Left-Wing Gender Insanity | Donald J. Trump for President 2024](https://www.donaldjtrump.com/agenda47/president-trumps-plan-to-protect-children-from-left-wing-gender-insanity)).
@@ -9,34 +8,33 @@ For a full description of the workflow and results:
 - [Report](https://github.com/mikaelpoli/after-the-vote-network/blob/main/report.pdf)
 - [PPT (.pdf)](https://github.com/mikaelpoli/after-the-vote-network/blob/main/presentation.pdf)
 
-## Essential Project Repo Structure
-[root.]
-  - data/
-	  - comments/
-	  - posts/
-	  - df_dd.json
-	  - docs_dd.json
-	  - docs_dd_giant.json
-	  - topic_df.csv
-  - src/
-  - results/
-	  - graphs/
-	  - models/
-	  - plots/
-    - .gitignore
-- build_network.ipynb
-- fetch_comments.py
-- fetch_posts.py
-- graph_analysis.ipynb
-- preprocess_comments.py
-- preprocess_posts.py
-- presentation.pdf
-- report.pdf
-- sentiment_graph.ipynb
-- topic_detection_bertopic.ipynb
-- topic_detection_leiden.ipynb
-- topic_detection_louvain.ipynb
-- bertagent_analysis.ipynb
+## Essential Repo Structure
+``` bash
+.
+├── data/
+│   ├── comments/
+│   ├── posts/
+│   ├── df_dd.json
+│   ├── docs_dd.json          # Original documents + topics assigned by BERTopic, BERTopic-reduced, Louvain, Leiden
+│   ├── docs_dd_giant.json    # Original and POS-tagged documents in the final document-level network
+│   └── topic_df.csv
+├── src/                      # Various utility functions
+├── results/
+│   ├── graphs/
+│   ├── models/
+│   └── plots/
+├── build_network.ipynb
+├── fetch_comments.py
+├── fetch_posts.py
+├── graph_analysis.ipynb
+├── preprocess_comments.py
+├── preprocess_posts.py
+├── sentiment_graph.ipynb
+├── topic_detection_bertopic.ipynb
+├── topic_detection_leiden.ipynb
+├── topic_detection_louvain.ipynb
+└── bertagent_analysis.ipynb
+```
 
 ### Running the Code
 Use **Python 3.11** for compatibility with spaCy (must install spaCy's English language pipeline `en_core_web_sm`), either in a venv or in Google Colab. If using Colab, the path to the directories and files may need to be reset. The order in which the Python files and notebooks were created is:
